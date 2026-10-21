@@ -9,6 +9,25 @@
     "logo": "/logo.svg",
     "logoAlt": "McCombs AI Hackathon"
   },
+  "photos": {
+    "_note": "Images live in website/public/photos. Keep alt text descriptive; captions and credits are shown on the page.",
+    "atrium": {
+      "src": "/photos/atrium.webp",
+      "alt": "Hundreds of patterned paper kites suspended in the atrium of Rowling Hall, one bearing the Longhorn",
+      "caption": "Rowling Hall atrium",
+      "credit": "TODO confirm artwork credit: Jacob Hashimoto, Landmarks, The University of Texas at Austin"
+    },
+    "classroom": {
+      "src": "/photos/classroom.webp",
+      "alt": "Students working on laptops in a tiered McCombs classroom during an evening session",
+      "caption": "A McCombs Tech Club build session"
+    },
+    "rowlingHall": {
+      "src": "/photos/rowling-hall.webp",
+      "alt": "Rowling Hall, home of the McCombs MBA, lit at dusk",
+      "caption": "Rowling Hall, McCombs School of Business"
+    }
+  },
   "event": {
     "name": "McCombs AI Hackathon",
     "year": "2027",
