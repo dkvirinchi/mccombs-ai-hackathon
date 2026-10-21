@@ -22,7 +22,7 @@ var LABELS = {
     parttime_other: "Part-time MBA or other",
   },
   availability: { yes: "Yes", maybe: "Maybe", no: "No" },
-  applyingAs: { team: "With a team", solo: "Solo" },
+  applyingAs: { team: "With a team", solo: "Individually" },
   aiSubscription: {
     none: "None",
     free: "Free tiers only",

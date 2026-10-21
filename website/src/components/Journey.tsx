@@ -6,13 +6,6 @@ import { content } from "@/lib/content";
 import { Section, SectionHeading } from "@/components/layout/Section";
 import { T } from "@/components/layout/Todo";
 
-const icons: Record<string, string> = {
-  bootcamp: "🎒",
-  team: "🤝",
-  build: "🛠️",
-  demo: "🏆",
-};
-
 /**
  * Scroll-driven journey (F-4). A vertical progress line fills as the reader
  * scrolls through the four stages. With reduced motion the line is simply full.
@@ -54,12 +47,7 @@ export function Journey() {
             <p className="text-sm font-semibold uppercase tracking-wider text-limestone">
               <T>{step.when}</T>
             </p>
-            <h3 className="display mt-2 text-3xl text-white sm:text-4xl">
-              <span aria-hidden className="mr-3">
-                {icons[step.icon] ?? ""}
-              </span>
-              {step.title}
-            </h3>
+            <h3 className="display mt-2 text-3xl text-white sm:text-4xl">{step.title}</h3>
             <p className="mt-3 max-w-2xl text-base text-limestone sm:text-lg">{step.body}</p>
           </motion.li>
         ))}

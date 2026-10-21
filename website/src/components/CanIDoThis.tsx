@@ -24,8 +24,7 @@ export function CanIDoThis() {
   };
 
   const answered = picked[step];
-  const isNegative = answered && q.options.indexOf(answered) === 1 && "answerIfNo" in q;
-  const answerText = isNegative ? (q as { answerIfNo: string }).answerIfNo : q.answer;
+  const answerText = q.options.find((o) => o.label === answered)?.answer ?? "";
 
   return (
     <Section id="can-i-do-this" tone="limestone">
@@ -55,7 +54,7 @@ export function CanIDoThis() {
                 </p>
                 <p className="display mt-2 text-3xl text-charcoal sm:text-4xl">{q.question}</p>
                 <div className="mt-6 flex flex-wrap gap-3" role="group" aria-label={q.question}>
-                  {q.options.map((opt) => (
+                  {q.options.map(({ label: opt }) => (
                     <button
                       key={opt}
                       type="button"
@@ -85,7 +84,7 @@ export function CanIDoThis() {
                         onClick={() => setStep((s) => s + 1)}
                         className="mt-5 inline-flex items-center gap-2 rounded-full bg-charcoal px-5 py-2.5 text-sm font-semibold text-white hover:bg-charcoal-deep"
                       >
-                        {step + 1 < c.questions.length ? "Next question" : "See the answer"} <span aria-hidden>→</span>
+                        {step + 1 < c.questions.length ? "Next question" : "Finish"} <span aria-hidden>→</span>
                       </button>
                     </motion.div>
                   )}

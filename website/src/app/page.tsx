@@ -3,7 +3,7 @@ import { CanIDoThis } from "@/components/CanIDoThis";
 import { WhatIsIt } from "@/components/sections/WhatIsIt";
 import { WhoCanApply } from "@/components/sections/WhoCanApply";
 import { Journey } from "@/components/Journey";
-import { Selection } from "@/components/sections/Selection";
+import { ApplyCta } from "@/components/sections/ApplyCta";
 import { FAQ } from "@/components/sections/FAQ";
 
 export default function HomePage() {
@@ -14,7 +14,7 @@ export default function HomePage() {
       <CanIDoThis />
       <WhoCanApply />
       <Journey />
-      <Selection />
+      <ApplyCta />
       <FAQ />
     </>
   );
