@@ -1,0 +1,406 @@
+{
+  "_readme": "Every piece of copy, every date and every link on the site lives here. Edit this file, open a pull request, and the site updates on merge. Values marked TODO are placeholders waiting on a decision. Dates use ISO 8601 with the Central Time offset.",
+
+  "meta": {
+    "siteName": "McCombs AI Hackathon",
+    "title": "McCombs AI Hackathon 2027",
+    "description": "A spring 2027 build sprint where McCombs MBA teams solve real company problems with AI tools. No coding experience needed. No team needed. Boot camp on Feb 5, 2027.",
+    "url": "TODO https://mccombs-ai-hackathon.vercel.app",
+    "ogImage": "/og.png"
+  },
+
+  "event": {
+    "name": "McCombs AI Hackathon",
+    "year": "2027",
+    "promise": "Turn a business problem into a working AI product in one week.",
+    "seats": 100,
+    "teamSize": { "min": 2, "max": 4 },
+    "organizer": "McCombs Tech Club",
+    "venue": "TODO McCombs School of Business, Austin, TX"
+  },
+
+  "dates": {
+    "applicationsOpen": "2026-11-09T09:00:00-06:00",
+    "applicationsClose": "2026-12-04T23:59:00-06:00",
+    "decisionsBy": "2026-12-11",
+    "bootCamp": "2027-02-05",
+    "buildWindow": { "start": "TODO", "end": "TODO", "label": "TODO Build week, dates coming soon" },
+    "demoDay": { "date": "TODO", "label": "TODO Demo day, date coming soon" }
+  },
+
+  "contact": {
+    "email": "TODO organizers@utexas.edu",
+    "label": "Questions? Email the organizing team"
+  },
+
+  "features": {
+    "resumeUpload": false,
+    "banner": false,
+    "seatMeter": false
+  },
+
+  "banner": {
+    "text": "",
+    "href": ""
+  },
+
+  "nav": [
+    { "label": "What is it", "href": "/#what-is-it" },
+    { "label": "Who can apply", "href": "/#who-can-apply" },
+    { "label": "Format", "href": "/#format" },
+    { "label": "Selection", "href": "/#selection" },
+    { "label": "FAQ", "href": "/#faq" }
+  ],
+
+  "hero": {
+    "eyebrow": "Spring 2027 · McCombs School of Business",
+    "headline": "Build with AI. No code. No team required.",
+    "subhead": "A one-week sprint where MBA teams turn real company problems into working AI products. The boot camp on Feb 5 gets everyone to the same starting line.",
+    "primaryCta": "Apply now",
+    "secondaryCta": "What is a hackathon?",
+    "keyDatesLabel": "Key dates",
+    "typedLabel": "Type a business problem",
+    "demoCaption": "In the hackathon, prompts like these become products like this.",
+    "prompts": [
+      {
+        "problem": "Cut invoice review from 3 days to 3 hours",
+        "app": {
+          "name": "InvoiceTriage",
+          "kpi": { "label": "Avg. review time", "value": "2.8 hrs", "delta": "-91%" },
+          "rows": ["Flag mismatched POs", "Route approvals", "Draft vendor replies"],
+          "action": "Approve batch"
+        }
+      },
+      {
+        "problem": "Answer tenant maintenance requests in under a minute",
+        "app": {
+          "name": "FixDesk",
+          "kpi": { "label": "First response", "value": "48 sec", "delta": "-97%" },
+          "rows": ["Classify urgency", "Book a technician", "Send status updates"],
+          "action": "Dispatch"
+        }
+      },
+      {
+        "problem": "Summarize 200 customer calls into a weekly product brief",
+        "app": {
+          "name": "CallPulse",
+          "kpi": { "label": "Calls processed", "value": "212", "delta": "this week" },
+          "rows": ["Cluster complaints", "Rank feature asks", "Draft the brief"],
+          "action": "Publish brief"
+        }
+      }
+    ]
+  },
+
+  "canIDoThis": {
+    "heading": "Can I do this?",
+    "subhead": "Three quick questions. Spoiler: the answer is yes.",
+    "questions": [
+      {
+        "question": "I've never written code.",
+        "options": ["True", "False"],
+        "answer": "Perfect. Most of last year's best products came from people who prompted well, not people who coded. The boot camp teaches the tools from zero."
+      },
+      {
+        "question": "I don't have a team.",
+        "options": ["True", "False"],
+        "answer": "No problem. Apply solo and we place you on a balanced team of two to four, mixing experienced and new builders."
+      },
+      {
+        "question": "I can be there all day on Friday, Feb 5.",
+        "options": ["Yes", "Not sure yet"],
+        "answer": "Great, that's the one hard requirement. The boot camp is where everyone gets their tools, their team and their starting point.",
+        "answerIfNo": "Full attendance on Feb 5 is the one hard requirement, so check your calendar before you apply. You can answer \"Maybe\" on the form, but confirmed applicants get priority."
+      }
+    ],
+    "result": {
+      "heading": "You're in the right place.",
+      "body": "That's everything the hackathon needs from you. The rest we teach.",
+      "cta": "Start my application"
+    }
+  },
+
+  "whatIsIt": {
+    "heading": "What is a hackathon?",
+    "lead": "Not hacking. Building.",
+    "body": [
+      "A hackathon is a short, focused build sprint. Teams get a real problem from a real company and have about a week to turn it into a working product using AI tools.",
+      "Nothing to do with security or breaking into systems. Think of it as a case competition where the deliverable is a product people can click on, not a slide deck.",
+      "No coding experience needed. No team needed. The boot camp gets everyone to the same starting line."
+    ],
+    "stats": [
+      { "value": "100", "label": "seats" },
+      { "value": "2–4", "label": "people per team" },
+      { "value": "1 week", "label": "to build" },
+      { "value": "0", "label": "lines of code required" }
+    ]
+  },
+
+  "whoCanApply": {
+    "heading": "Who can apply",
+    "lead": "Every McCombs MBA student. Experience optional.",
+    "groups": [
+      {
+        "title": "Full-time MBA",
+        "tag": "Priority",
+        "body": "First-year and second-year full-time MBA students get priority for seats."
+      },
+      {
+        "title": "Part-time and TEMBA",
+        "tag": "Eligible",
+        "body": "Working professionals are welcome. Feb 5 is a Friday and full-day attendance is required, so check your calendar first."
+      }
+    ],
+    "notes": [
+      "No build or coding experience required. Veterans, career switchers and first-time builders are exactly who this is for.",
+      "Apply with a team of two to four, or solo and we'll place you.",
+      "One application per person, even if you're applying as a team."
+    ]
+  },
+
+  "journey": {
+    "heading": "How it works",
+    "subhead": "Four stages, one week, one working product.",
+    "steps": [
+      {
+        "title": "Boot camp",
+        "when": "Friday, Feb 5, 2027",
+        "body": "A full day on campus. Learn the AI tools, see what's possible, meet the partner companies and their problems. Everyone leaves with the same toolkit.",
+        "icon": "bootcamp"
+      },
+      {
+        "title": "Team up",
+        "when": "Same day",
+        "body": "Teams of two to four lock in. Solo applicants are placed on balanced teams. Each team picks a company problem to solve.",
+        "icon": "team"
+      },
+      {
+        "title": "Build",
+        "when": "TODO Build week dates",
+        "body": "A week to turn the problem into a working product. Mentors and office hours along the way. Work from anywhere.",
+        "icon": "build"
+      },
+      {
+        "title": "Demo day",
+        "when": "TODO Demo day date",
+        "body": "Show what you built to the partner companies, McCombs leadership and the Austin tech community. Winners announced.",
+        "icon": "demo"
+      }
+    ]
+  },
+
+  "selection": {
+    "heading": "How selection works",
+    "lead": "About 100 seats. Here's how we fill them.",
+    "points": [
+      "Full attendance at the Feb 5 boot camp is required. Applicants who can't make it won't be selected.",
+      "Teams are preferred. If you already have two to four people, apply together using the same team name.",
+      "Full-time MBA applicants get priority, then part-time and TEMBA, then solo applicants.",
+      "If applications exceed seats, we'll publish the exact cut rule before decisions go out.",
+      "Decisions by email by TODO Dec 11, 2026."
+    ],
+    "closeNote": "Applications close Friday, Dec 4, 2026 at 11:59 PM CT."
+  },
+
+  "faq": {
+    "heading": "Questions",
+    "items": [
+      {
+        "q": "How much time does it take?",
+        "a": "One full day on Friday, Feb 5 for the boot camp, then about a week of building on your own schedule with your team. Most teams spend 15 to 25 hours over the build week. Demo day is a few hours."
+      },
+      {
+        "q": "Do I need to know how to code?",
+        "a": "No. The boot camp teaches the AI tools from scratch, and the tools do the heavy lifting. If you can describe a problem clearly, you can build."
+      },
+      {
+        "q": "Which AI tools do we use, and who pays?",
+        "a": "TODO We're confirming tool access and credits with partners. You'll have what you need to build without paying out of pocket. Details on this page before applications close."
+      },
+      {
+        "q": "What if I don't have a team?",
+        "a": "Apply solo. We place solo applicants on teams of two to four, balancing experience so every team has a mix of builders and first-timers."
+      },
+      {
+        "q": "How big can a team be?",
+        "a": "Two to four people. Everyone on the team submits their own application with the same team name."
+      },
+      {
+        "q": "What should I bring?",
+        "a": "A laptop, a charger and a problem you'd love to solve. Everything else is provided."
+      },
+      {
+        "q": "Who are the partner companies?",
+        "a": "TODO Announcing soon. Each partner brings a real problem for teams to work on."
+      },
+      {
+        "q": "What happens with my data?",
+        "a": "Your application is used only for hackathon selection and team placement. It's stored in a sheet shared with the organizing team, and EIDs are deleted 30 days after demo day."
+      },
+      {
+        "q": "Who do I contact?",
+        "a": "Email the organizing team at TODO organizers@utexas.edu."
+      }
+    ]
+  },
+
+  "form": {
+    "title": "Apply",
+    "intro": "About three minutes. One question at a time. Your answers save in this browser so you can come back.",
+    "startCta": "Start",
+    "nextCta": "Next",
+    "backCta": "Back",
+    "submitCta": "Submit application",
+    "submittingCta": "Sending…",
+    "progressLabel": "Question {current} of {total}",
+    "optionalTag": "Optional",
+    "fields": {
+      "name": {
+        "label": "What's your full name?",
+        "help": "As it appears on your UT record.",
+        "placeholder": "Jane Doe"
+      },
+      "eid": {
+        "label": "What's your UT EID?",
+        "help": "Letters followed by numbers, like abc123. We use it to make sure each person has one application.",
+        "placeholder": "abc123"
+      },
+      "email": {
+        "label": "What's your UT email?",
+        "help": "Must end in utexas.edu. Decisions go to this address.",
+        "placeholder": "you@utexas.edu"
+      },
+      "program": {
+        "label": "Which program are you in?",
+        "help": "Full-time MBA students get priority. Everyone else is eligible."
+      },
+      "feb5": {
+        "label": "Can you attend the full boot camp on Friday, Feb 5, 2027?",
+        "help": "It runs all day on campus. Full attendance is required.",
+        "noNote": "Full attendance at the boot camp is required for selection. You can still submit, but you won't be selected unless this changes."
+      },
+      "week": {
+        "label": "Are you available for the rest of hackathon week?",
+        "help": "TODO Build week dates coming soon. Teams build on their own schedule; plan on 15 to 25 hours."
+      },
+      "applyingAs": {
+        "label": "Are you applying with a team or solo?",
+        "help": "Teams are two to four people. Solo applicants are placed on a team."
+      },
+      "teamName": {
+        "label": "What's your team name?",
+        "help": "Every teammate enters this same name on their own application. Capitalization doesn't matter.",
+        "placeholder": "Invoice Ninjas"
+      },
+      "teammateEmails": {
+        "label": "What are your teammates' UT emails?",
+        "help": "One to three addresses, not including yours. Each teammate still submits their own application.",
+        "placeholder": "teammate@utexas.edu",
+        "addLabel": "Add another teammate",
+        "removeLabel": "Remove"
+      },
+      "aiSubscription": {
+        "label": "What AI tools do you use today?",
+        "help": "Pick the closest match. There's no wrong answer; it helps us balance teams and plan support."
+      },
+      "buildExperience": {
+        "label": "Have you built anything with AI or no-code tools before?",
+        "help": "Honest answers help us place solo applicants on balanced teams."
+      },
+      "why": {
+        "label": "Why do you want to do this?",
+        "help": "Up to 300 characters. A couple of sentences is plenty.",
+        "placeholder": "I want to…"
+      },
+      "resume": {
+        "label": "Upload your resume",
+        "help": "PDF, up to 5 MB. Optional."
+      },
+      "consent": {
+        "label": "One last thing",
+        "text": "I understand my application data is used only for hackathon selection and team placement, is shared only with the organizing team, and is deleted 30 days after demo day.",
+        "checkboxLabel": "I agree"
+      }
+    },
+    "options": {
+      "program": [
+        { "value": "fulltime_mba", "label": "Full-time MBA" },
+        { "value": "temba", "label": "TEMBA" },
+        { "value": "parttime_other", "label": "Part-time MBA or other" }
+      ],
+      "availability": [
+        { "value": "yes", "label": "Yes" },
+        { "value": "maybe", "label": "Maybe" },
+        { "value": "no", "label": "No" }
+      ],
+      "applyingAs": [
+        { "value": "team", "label": "With a team", "description": "Two to four people. Each of you applies." },
+        { "value": "solo", "label": "Solo", "description": "We'll place you on a team." }
+      ],
+      "aiSubscription": [
+        { "value": "none", "label": "None", "description": "I don't really use AI tools yet" },
+        { "value": "free", "label": "Free tiers only", "description": "ChatGPT, Claude or Gemini, no subscription" },
+        { "value": "school", "label": "School enterprise plan", "description": "Through UT or McCombs" },
+        { "value": "paid", "label": "Paid individual plan", "description": "Pro, Plus or similar" },
+        { "value": "power", "label": "Power-user plan", "description": "Max or similar" }
+      ],
+      "buildExperience": [
+        { "value": "none", "label": "None", "description": "This would be my first" },
+        { "value": "some", "label": "Some", "description": "No-code tools, tutorials or small experiments" },
+        { "value": "shipped", "label": "I've shipped something", "description": "People other than me have used it" }
+      ]
+    },
+    "errors": {
+      "required": "This one's required.",
+      "nameLength": "Please enter your full name (2 to 80 characters).",
+      "eidFormat": "An EID is letters followed by numbers, like abc123.",
+      "emailDomain": "Please use an email that ends in utexas.edu.",
+      "emailFormat": "That doesn't look like a valid email.",
+      "teamNameLength": "Team names are 2 to 40 characters.",
+      "teammateCount": "Add between 1 and 3 teammate emails.",
+      "teammateSelf": "That's your own email. Add your teammates' emails instead.",
+      "teammateDuplicate": "You've listed the same email twice.",
+      "whyLength": "Keep it to 300 characters.",
+      "consent": "We need your consent to process the application."
+    },
+    "review": {
+      "heading": "Check your answers",
+      "body": "You can go back and change anything before you submit.",
+      "editLabel": "Edit"
+    },
+    "closed": {
+      "beforeOpen": {
+        "heading": "Applications open Nov 9",
+        "body": "Come back on Monday, Nov 9, 2026 to apply. In the meantime, read how it works and round up a team."
+      },
+      "afterClose": {
+        "heading": "Applications are closed",
+        "body": "Thanks for the interest. Decisions go out by email by Dec 11, 2026. Questions? Email the organizing team."
+      }
+    },
+    "confirmation": {
+      "heading": "You're in the running.",
+      "body": "We've got your application. You'll get a confirmation email at {email} in the next few minutes, and a decision by {decisionsBy}.",
+      "resubmittedBody": "We've updated your earlier application. The newest answers are the ones we'll use.",
+      "idLabel": "Reference",
+      "teamNote": "Remind your teammates to apply with the team name \"{teamName}\". Every seat needs its own application.",
+      "homeCta": "Back to the site"
+    },
+    "failure": {
+      "heading": "That didn't go through",
+      "body": "Your answers are still here. Try again, and if it keeps failing, email us and we'll take your application by hand.",
+      "retryCta": "Try again"
+    },
+    "honeypotLabel": "Leave this field empty"
+  },
+
+  "footer": {
+    "line": "Run by the McCombs Tech Club with support from partners TODO.",
+    "disclaimer": "Not an official University of Texas or McCombs School of Business website.",
+    "links": [
+      { "label": "Apply", "href": "/apply" },
+      { "label": "FAQ", "href": "/#faq" },
+      { "label": "Contact", "href": "mailto:TODO organizers@utexas.edu" }
+    ]
+  }
+}

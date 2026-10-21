@@ -1,0 +1,47 @@
+# Optional. Deploys website/ to Vercel production on every push to main using the Vercel CLI,
+# so merges by any contributor deploy regardless of who authored the commit.
+# Only runs when the VERCEL_TOKEN secret is set. If you use Vercel's GitHub integration instead,
+# leave the secret unset so you don't get double deploys. See README.md > Deploying.
+name: website-deploy
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "website/**"
+
+concurrency:
+  group: website-deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+    defaults:
+      run:
+        working-directory: website
+    steps:
+      - name: Skip when Vercel secrets are not configured
+        id: gate
+        run: |
+          if [ -z "$VERCEL_TOKEN" ]; then echo "skip=true" >> "$GITHUB_OUTPUT"; echo "VERCEL_TOKEN not set, skipping."; else echo "skip=false" >> "$GITHUB_OUTPUT"; fi
+      - uses: actions/checkout@v4
+        if: steps.gate.outputs.skip == 'false'
+      - uses: actions/setup-node@v4
+        if: steps.gate.outputs.skip == 'false'
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: website/package-lock.json
+      - if: steps.gate.outputs.skip == 'false'
+        run: npm ci
+      - if: steps.gate.outputs.skip == 'false'
+        run: npx vercel@latest pull --yes --environment=production --token="$VERCEL_TOKEN"
+      - if: steps.gate.outputs.skip == 'false'
+        run: npx vercel@latest build --prod --token="$VERCEL_TOKEN"
+      - if: steps.gate.outputs.skip == 'false'
+        run: npx vercel@latest deploy --prebuilt --prod --token="$VERCEL_TOKEN"

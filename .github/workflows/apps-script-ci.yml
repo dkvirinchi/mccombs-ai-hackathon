@@ -1,0 +1,17 @@
+name: apps-script-ci
+
+on:
+  pull_request:
+    paths:
+      - "apps-script/**"
+
+jobs:
+  syntax:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Syntax-check every script file
+        run: for f in apps-script/*.js; do node --check "$f"; done

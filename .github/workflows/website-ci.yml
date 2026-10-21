@@ -1,0 +1,33 @@
+name: website-ci
+
+on:
+  pull_request:
+    paths:
+      - "website/**"
+      - ".github/workflows/website-ci.yml"
+  push:
+    branches: [main]
+    paths:
+      - "website/**"
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: website
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: website/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npx tsc --noEmit
+      - run: npm run build
+        env:
+          NEXT_PUBLIC_ENV: preview
+      - name: Check content/site.json parses
+        run: node -e "JSON.parse(require('fs').readFileSync('content/site.json','utf8'))"

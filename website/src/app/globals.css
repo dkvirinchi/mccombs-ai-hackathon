@@ -1,0 +1,88 @@
+@import "tailwindcss";
+
+/*
+  Palette from the PRD design section.
+  Burnt orange is for large display headlines and as a button fill with white text only.
+  It is never used for small body copy (4.3:1 on off-white, below AA). No tints of burnt orange.
+*/
+:root {
+  --color-orange: #bf5700;
+  --color-orange-deep: #a34a00; /* hover state; a shade, not a tint */
+  --color-canvas: #faf7f2;
+  --color-limestone: #d6d2c4;
+  --color-limestone-soft: #ebe8df;
+  --color-charcoal: #333f48;
+  --color-charcoal-deep: #1f262c;
+  --color-ink: #333f48;
+  --color-muted: #5b6770;
+  --color-white: #ffffff;
+  --color-ok: #2f6b3a;
+  --color-error: #a4262c;
+}
+
+@theme inline {
+  --color-orange: var(--color-orange);
+  --color-orange-deep: var(--color-orange-deep);
+  --color-canvas: var(--color-canvas);
+  --color-limestone: var(--color-limestone);
+  --color-limestone-soft: var(--color-limestone-soft);
+  --color-charcoal: var(--color-charcoal);
+  --color-charcoal-deep: var(--color-charcoal-deep);
+  --color-ink: var(--color-ink);
+  --color-muted: var(--color-muted);
+  --color-ok: var(--color-ok);
+  --color-error: var(--color-error);
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+body {
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--color-orange);
+  color: #fff;
+}
+
+/* Visible focus for keyboard users everywhere. */
+:focus-visible {
+  outline: 3px solid var(--color-orange);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.display {
+  letter-spacing: -0.035em;
+  line-height: 0.98;
+  font-weight: 800;
+}
+
+.todo {
+  background: rgba(191, 87, 0, 0.1);
+  outline: 1px dashed var(--color-orange);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
