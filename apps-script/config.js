@@ -96,7 +96,7 @@ var EMAIL = {
     "Thanks for applying to the McCombs AI Hackathon. Your application is in.\n\n" +
     "Reference: {id}\n" +
     "{teamLine}" +
-    "Seats are limited, so applying doesn't guarantee a spot. We'll email you by {decisionsBy} to let you know if you've been selected.\n\n" +
+    "We'll email you by {decisionsBy} to let you know if you've been selected.\n\n" +
     "Questions? Reply to this email.\n\n" +
     "The McCombs AI Hackathon organizing team",
   teamLine:

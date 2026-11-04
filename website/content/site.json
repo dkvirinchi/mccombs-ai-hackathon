@@ -43,7 +43,7 @@
   "dates": {
     "applicationsOpen": "2026-11-09T09:00:00-06:00",
     "applicationsClose": "2026-12-15T23:59:00-06:00",
-    "decisionsBy": "2026-12-11",
+    "decisionsBy": "2027-01-22",
     "bootCamp": "2027-02-05",
     "bootCampTime": "9 AM to 3 PM",
     "buildWindow": {
@@ -618,12 +618,12 @@
       },
       "afterClose": {
         "heading": "Applications are closed",
-        "body": "Decisions go out by email by Dec 11, 2026. For questions, contact the organizing team."
+        "body": "Decisions go out by email by Jan 22, 2027. For questions, contact the organizing team."
       }
     },
     "confirmation": {
       "heading": "Application received.",
-      "body": "A confirmation email is on its way to {email}. Seats are limited, so applying doesn't guarantee a spot. We'll email you by {decisionsBy} to let you know if you've been selected.",
+      "body": "A confirmation email is on its way to {email}. We'll email you by {decisionsBy} to let you know if you've been selected.",
       "resubmittedBody": "Your earlier application has been updated. The newest answers are the ones we will use.",
       "idLabel": "Reference",
       "teamNote": "Remind each member of \"{teamName}\" to submit their own application with the same team name.",
@@ -638,7 +638,7 @@
     "previewNote": "Test mode: this form is open for review only. Submissions go to the test sheet, not real applications."
   },
   "footer": {
-    "line": "Run by the McCombs Tech Club with support from partners TODO.",
+    "line": "Run by the McCombs Tech Club.",
     "disclaimer": "Not an official University of Texas or McCombs School of Business website.",
     "links": [
       {
@@ -657,7 +657,7 @@
   },
   "applyCta": {
     "heading": "Applications open soon",
-    "body": "About 100 seats. Teams preferred. Full attendance at the Feb 5 boot camp required. Decisions by email by Dec 11, 2026.",
+    "body": "About 100 seats. Teams preferred. Full attendance at the Feb 5 boot camp required. Decisions by email by Jan 22, 2027.",
     "closeNote": "Applications close Tuesday, Dec 15, 2026 at 11:59 PM CT.",
     "cta": "Apply now"
   }

@@ -26,7 +26,7 @@ A tiny web app that takes the form's JSON, validates it, writes one row per appl
    | `SEND_EMAIL` | `false` until launch, then `true` |
    | `FROM_NAME` | `McCombs AI Hackathon` |
    | `REPLY_TO` | organizer inbox |
-   | `DECISIONS_BY` | Human-readable date, e.g. `Jan 30, 2027` (TBD) |
+   | `DECISIONS_BY` | Human-readable date, `Jan 22, 2027` |
 
    The open and close dates must match `website/content/site.json`. The site hides the form outside the window; the script rejects any **production** submission that still arrives. Test-link submissions (`env: "preview"`) are accepted any time and go to the TEST sheet.
 5. **Run `setup`** from the editor (pick `setup` in the function dropdown, Run). Approve the permissions. Both sheets get a frozen header row.
