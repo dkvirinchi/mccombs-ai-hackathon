@@ -60,6 +60,8 @@
     "label": "Questions? Email the organizing team"
   },
   "features": {
+    "_note": "applicationsLive is the on/off switch for the live application form. Leave it false until launch; flip to true and set dates.applicationsOpen/applicationsClose to open it. Test links (PR previews) and local dev always show the form.",
+    "applicationsLive": false,
     "resumeUpload": false,
     "banner": false,
     "seatMeter": false
@@ -498,8 +500,8 @@
     },
     "closed": {
       "beforeOpen": {
-        "heading": "Applications open Nov 9",
-        "body": "Applications open on Monday, Nov 9, 2026. Until then, review how the hackathon works and consider forming a team."
+        "heading": "Applications open soon",
+        "body": "Applications are not open yet. We will announce the date here and through the McCombs Tech Club. Until then, review how the hackathon works and consider forming a team."
       },
       "afterClose": {
         "heading": "Applications are closed",
@@ -519,7 +521,8 @@
       "body": "Your answers are still here. Try again, and if it keeps failing, email the organizing team and we will take your application by hand.",
       "retryCta": "Try again"
     },
-    "honeypotLabel": "Leave this field empty"
+    "honeypotLabel": "Leave this field empty",
+    "previewNote": "Test mode: this form is open for review only. Submissions go to the test sheet, not real applications."
   },
   "footer": {
     "line": "Run by the McCombs Tech Club with support from partners TODO.",
@@ -540,7 +543,7 @@
     ]
   },
   "applyCta": {
-    "heading": "Applications open Nov 9",
+    "heading": "Applications open soon",
     "body": "About 100 seats. Teams preferred. Full attendance at the Feb 5 boot camp required. Decisions by email by Dec 11, 2026.",
     "closeNote": "Applications close Friday, Dec 4, 2026 at 11:59 PM CT.",
     "cta": "Apply now"

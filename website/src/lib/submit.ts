@@ -1,4 +1,5 @@
 import type { Application } from "./schema";
+import { REVIEW_MODE } from "./window";
 
 /**
  * Form-to-Sheet contract. Keep in sync with /apps-script/Code.js.
@@ -22,8 +23,9 @@ export type SubmitResponse =
   | { ok: false; error: "server" | "config"; message?: string };
 
 export const SCRIPT_URL = process.env.NEXT_PUBLIC_APPS_SCRIPT_URL ?? "";
+// Test links and local dev always write to the TEST sheet, whatever NEXT_PUBLIC_ENV says.
 export const SUBMIT_ENV: "prod" | "preview" =
-  process.env.NEXT_PUBLIC_ENV === "prod" ? "prod" : "preview";
+  !REVIEW_MODE && process.env.NEXT_PUBLIC_ENV === "prod" ? "prod" : "preview";
 
 export function buildPayload(app: Application, honeypot: string): SubmitPayload {
   return {
@@ -39,6 +41,9 @@ export function buildPayload(app: Application, honeypot: string): SubmitPayload 
 
 export async function submitApplication(payload: SubmitPayload): Promise<SubmitResponse> {
   if (!SCRIPT_URL) {
+    // Review mode with no backend configured (usually local dev): pretend it worked so the
+    // whole flow, including the confirmation screen, can be clicked through. Nothing is saved.
+    if (REVIEW_MODE) return { ok: true, id: "HK-TEST0000", resubmission: false };
     return { ok: false, error: "config", message: "NEXT_PUBLIC_APPS_SCRIPT_URL is not set." };
   }
   const controller = new AbortController();

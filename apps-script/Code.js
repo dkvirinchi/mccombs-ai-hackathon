@@ -36,7 +36,9 @@ function doPost(e) {
     // Honeypot: bots fill hidden fields. Pretend success so they don't retry, write nothing.
     if (body.hp) return json({ ok: true, id: "HK-00000000", resubmission: false });
 
-    if (!isOpen(now)) return json({ ok: false, error: "closed" });
+    // The open/close window only applies to real applications. Test-link submissions (env "preview")
+    // go to the TEST sheet and are accepted any time, so organizers can review before launch.
+    if (body.env === "prod" && !isOpen(now)) return json({ ok: false, error: "closed" });
 
     var v = validate(body);
     if (!v.ok) return json({ ok: false, error: "validation", fields: v.fields });

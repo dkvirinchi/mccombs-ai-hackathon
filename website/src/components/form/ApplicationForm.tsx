@@ -6,7 +6,7 @@ import { content, stripTodo } from "@/lib/content";
 import { emptyValues, validateAll, validateField, type FieldKey, type FormValues } from "@/lib/schema";
 import { clearDraft, loadDraft, saveDraft } from "@/lib/draft";
 import { buildPayload, submitApplication, type SubmitResponse } from "@/lib/submit";
-import { applicationWindow, type WindowState } from "@/lib/window";
+import { applicationWindow, REVIEW_MODE, type WindowState } from "@/lib/window";
 import { Button } from "@/components/layout/Button";
 import { activeSteps, optionsFor } from "./steps";
 import { Question } from "./Question";
@@ -170,6 +170,9 @@ export function ApplicationForm() {
 
   return (
     <div ref={topRef} className="scroll-mt-24">
+      {REVIEW_MODE && (
+        <p className="mb-6 rounded-xl border border-charcoal/20 bg-limestone-soft px-4 py-3 text-sm font-medium text-charcoal">{f.previewNote}</p>
+      )}
       <ProgressBar current={reviewing ? total : stepIndex + 1} total={total} />
       {/* Honeypot: hidden from people, filled by bots. The script drops submissions where it is non-empty. */}
       <div aria-hidden className="absolute -left-[10000px] top-auto h-px w-px overflow-hidden">
