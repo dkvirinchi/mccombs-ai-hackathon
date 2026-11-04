@@ -1,5 +1,0 @@
-<!-- Neutral site mark: burnt-orange tile with an "M". Do not use the Longhorn or other UT marks here; the organizing team does not have rights to them. favicon.png and apple-touch-icon.png are rendered from this same design. -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="McCombs AI Hackathon">
-  <rect width="64" height="64" rx="12" fill="#BF5700"/>
-  <path d="M16 46V18h8l8 15 8-15h8v28h-8V32l-8 14-8-14v14z" fill="#FFFFFF"/>
-</svg>
