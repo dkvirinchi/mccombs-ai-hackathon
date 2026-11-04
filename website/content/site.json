@@ -42,7 +42,7 @@
   },
   "dates": {
     "applicationsOpen": "2026-11-09T09:00:00-06:00",
-    "applicationsClose": "2026-12-04T23:59:00-06:00",
+    "applicationsClose": "2026-12-15T23:59:00-06:00",
     "decisionsBy": "2026-12-11",
     "bootCamp": "2027-02-05",
     "bootCampTime": "9 AM to 3 PM",
@@ -57,7 +57,7 @@
     }
   },
   "contact": {
-    "email": "TODO organizers@utexas.edu",
+    "email": "hb9349@my.utexas.edu",
     "label": "Questions? Email the organizing team"
   },
   "features": {
@@ -313,13 +313,18 @@
       },
       {
         "q": "Who do I contact?",
-        "a": "Email the organizing team at TODO organizers@utexas.edu."
+        "a": "Email the organizing team at hb9349@my.utexas.edu."
       }
     ]
   },
   "form": {
     "title": "Apply",
-    "intro": "About five minutes, one question at a time. Your answers are saved in this browser so you can come back later. Seats are limited, so applying doesn't guarantee a spot. We'll email everyone once selections are made.",
+    "introBullets": [
+      "Seats are limited, please apply by {closeDate}.",
+      "We will email participants once selections are made.",
+      "Answers are saved if you need to come back later.",
+      "Please reach out to {email} if you have any questions."
+    ],
     "startCta": "Start",
     "nextCta": "Next",
     "backCta": "Back",
@@ -338,12 +343,11 @@
       },
       "eid": {
         "label": "What's your UT EID?",
-        "help": "Letters followed by numbers, like abc123. We use it to make sure each person has one application.",
         "placeholder": "abc123"
       },
       "email": {
         "label": "What's your UT email?",
-        "help": "Any address ending in utexas.edu, like you@my.utexas.edu. We'll send your decision here.",
+        "help": "This email will be used for all communications.",
         "placeholder": "you@my.utexas.edu"
       },
       "program": {
@@ -648,14 +652,14 @@
       },
       {
         "label": "Contact",
-        "href": "mailto:TODO organizers@utexas.edu"
+        "href": "mailto:hb9349@my.utexas.edu"
       }
     ]
   },
   "applyCta": {
     "heading": "Applications open soon",
     "body": "About 100 seats. Teams preferred. Full attendance at the Feb 5 boot camp required. Decisions by email by Dec 11, 2026.",
-    "closeNote": "Applications close Friday, Dec 4, 2026 at 11:59 PM CT.",
+    "closeNote": "Applications close Tuesday, Dec 15, 2026 at 11:59 PM CT.",
     "cta": "Apply now"
   }
 }

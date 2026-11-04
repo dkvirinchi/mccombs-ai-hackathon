@@ -6,7 +6,7 @@ import { content, stripTodo } from "@/lib/content";
 import { emptyValues, MAX_USE_CASES, validateAll, validateField, type FieldKey, type FormValues } from "@/lib/schema";
 import { clearDraft, loadDraft, saveDraft } from "@/lib/draft";
 import { buildPayload, submitApplication, type SubmitResponse } from "@/lib/submit";
-import { applicationWindow, REVIEW_MODE, type WindowState } from "@/lib/window";
+import { applicationWindow, formatDate, REVIEW_MODE, type WindowState } from "@/lib/window";
 import { Button } from "@/components/layout/Button";
 import { activeSteps, fillDates, optionsFor } from "./steps";
 import { Question } from "./Question";
@@ -177,7 +177,7 @@ export function ApplicationForm() {
       <div ref={topRef}>
         {mounted && previewNote}
         <h1 className="display text-5xl text-orange sm:text-6xl">{f.title}</h1>
-        <p className="mt-5 max-w-xl text-lg text-ink">{f.intro}</p>
+        <IntroBullets />
         <div className="mt-8">
           <Button size="lg" onClick={() => setStepIndex(0)} disabled={!mounted}>
             {f.startCta}
@@ -229,6 +229,35 @@ export function ApplicationForm() {
         ) : null}
       </AnimatePresence>
     </div>
+  );
+}
+
+/**
+ * Intro bullets from form.introBullets in content/site.json.
+ * {closeDate} becomes dates.applicationsClose and {email} becomes a mailto link to contact.email.
+ */
+function IntroBullets() {
+  const email = stripTodo(content.contact.email);
+  const closeDate = formatDate(content.dates.applicationsClose, { weekday: undefined, hour: undefined });
+  return (
+    <ul className="mt-5 max-w-xl list-disc space-y-2 pl-6 text-lg text-ink marker:text-orange">
+      {f.introBullets.map((line) => {
+        const [before, after] = line.replace("{closeDate}", closeDate).split("{email}");
+        return (
+          <li key={line}>
+            {before}
+            {after !== undefined && (
+              <>
+                <a href={`mailto:${email}`} className="break-words font-semibold text-charcoal underline underline-offset-4">
+                  {email}
+                </a>
+                {after}
+              </>
+            )}
+          </li>
+        );
+      })}
+    </ul>
   );
 }
 
