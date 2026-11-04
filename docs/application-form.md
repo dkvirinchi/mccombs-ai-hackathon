@@ -59,4 +59,6 @@ Build experience labels start with a number (1 to 4) so the column sorts by leve
 
 Uploaded PDFs are saved to the Drive folder in the `RESUME_FOLDER_ID` script property, named `Last, First (eid).pdf`. Test-link uploads are prefixed `[TEST]`. The Sheet stores the file link. Only share resumes with partners for rows where **OK to share resume** is Yes.
 
+A resubmission replaces the resume with whatever the new submission carries. A new file replaces the old one in Drive; no file withdraws it (the old file is trashed, the link and share opt-in are cleared). Files are checked for the PDF header on the server, not just the extension.
+
 The file is not kept in the browser draft, so an applicant who leaves and comes back has to attach it again (the form says so).

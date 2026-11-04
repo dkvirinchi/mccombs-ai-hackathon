@@ -45,7 +45,8 @@ function doPost(e) {
 
     var env = body.env === "prod" ? "prod" : "preview";
     var sheet = openSheet(env);
-    v.data.resumeLink = saveResume(v.data, env); // outside the lock: Drive uploads can be slow
+    var newResumeLink = saveResume(v.data, env); // outside the lock: Drive uploads can be slow
+    v.data.resumeLink = newResumeLink;
     v.data.resume = null; // don't keep the file contents around once saved
 
     var lock = LockService.getScriptLock();
@@ -53,9 +54,15 @@ function doPost(e) {
     var result;
     try {
       result = upsertApplication(sheet, v.data, now);
+    } catch (err) {
+      trashResume(newResumeLink); // the row was not written, so don't leave the file behind
+      throw err;
     } finally {
       lock.releaseLock();
     }
+    // A resubmission replaces the earlier resume (or withdraws it). Trash the old file so the
+    // folder only ever holds the file linked from the Sheet.
+    if (result.previousResumeLink && result.previousResumeLink !== newResumeLink) trashResume(result.previousResumeLink);
 
     sendConfirmation(v.data, result);
     return json({ ok: true, id: result.id, resubmission: result.resubmission });

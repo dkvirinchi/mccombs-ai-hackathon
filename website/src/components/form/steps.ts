@@ -15,6 +15,8 @@ export type Step = {
   heading?: string;
   /** For "pair" screens: the inputs on the screen, in order. */
   pair?: PairField[];
+  /** For "select" screens: show the option cards in two columns on wide screens. Default is one. */
+  columns?: 1 | 2;
   when?: (v: FormValues) => boolean;
 };
 
@@ -53,8 +55,8 @@ export const ALL_STEPS: Step[] = [
   { key: "buildWindow", kind: "select" },
   { key: "finalPresentation", kind: "select" },
   { key: "useCases", kind: "rank" },
-  { key: "aiSubscription", kind: "select" },
-  { key: "buildExperience", kind: "select" },
+  { key: "aiSubscription", kind: "select", columns: 2 },
+  { key: "buildExperience", kind: "select", columns: 2 },
   { key: "aiComfort", kind: "select" },
   ...(content.features.resumeUpload ? [{ key: "resume", kind: "resume" } as Step] : []),
 ];

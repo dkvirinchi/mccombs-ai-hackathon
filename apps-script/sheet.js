@@ -19,8 +19,8 @@ function writeHeaders(sheet) {
   sheet.getRange(1, 1, 1, COLUMNS.length).setValues([COLUMNS]).setFontWeight("bold");
   sheet.setFrozenRows(1);
   sheet.getRange(1, 1, 1, COLUMNS.length).setBackground("#D6D2C4");
-  sheet.setColumnWidth(col("Why"), 360);
   sheet.setColumnWidth(col("Teammate emails"), 260);
+  sheet.setColumnWidth(col("Resume link"), 260);
 }
 
 /** Live formulas for the computed columns on a given row. */
@@ -71,11 +71,13 @@ function formatStamp(date) {
  * Save an uploaded resume to the RESUME_FOLDER_ID Drive folder and return its link.
  * Test-link submissions get a "[TEST]" prefix so they are easy to clean up.
  * The folder inherits its sharing, so keep it shared with organizers only.
+ * Throws when the folder is not configured: the applicant then sees the retry screen
+ * instead of a success message for a file that was never stored.
  */
 function saveResume(d, env) {
   if (!d.resume) return "";
   var folderId = prop("RESUME_FOLDER_ID", "");
-  if (!folderId) return "Resume received, but RESUME_FOLDER_ID is not set";
+  if (!folderId) throw new Error("Script property RESUME_FOLDER_ID is not set.");
   var name = (env === "prod" ? "" : "[TEST] ") + d.lastName + ", " + d.firstName + " (" + d.eid + ").pdf";
   var blob = Utilities.newBlob(Utilities.base64Decode(d.resume.base64), "application/pdf", name);
   var file = DriveApp.getFolderById(folderId).createFile(blob);
@@ -83,17 +85,36 @@ function saveResume(d, env) {
 }
 
 /**
+ * Move a resume file to the Drive trash, given the link stored in the Sheet.
+ * Best effort: a file that is already gone, or a cell holding something other than a Drive link,
+ * is skipped with a warning rather than failing the submission.
+ */
+function trashResume(link) {
+  var m = String(link || "").match(/\/d\/([A-Za-z0-9_-]+)/);
+  if (!m) return;
+  try {
+    DriveApp.getFileById(m[1]).setTrashed(true);
+  } catch (err) {
+    console.warn("Could not trash old resume " + link + ": " + err.message);
+  }
+}
+
+/**
  * Append or overwrite the applicant's row. Call inside a LockService lock.
- * Resubmissions keep the first Timestamp, Submission ID and (if no new file) the earlier resume link,
- * and bump the Duplicate flag.
- * @returns {{id: string, row: number, resubmission: boolean}}
+ * Resubmissions keep the first Timestamp and Submission ID and bump the Duplicate flag.
+ * Everything else, including the resume and the share opt-in, is replaced by the newest answers,
+ * so an applicant can withdraw a resume or revoke consent by resubmitting without one.
+ * The caller trashes previousResumeLink once the new row is written.
+ * @returns {{id: string, row: number, resubmission: boolean, previousResumeLink: string}}
  */
 function upsertApplication(sheet, d, now) {
   var existingRow = findRowByEid(sheet, d.eid);
   var resubmission = existingRow > 0;
   var row = resubmission ? existingRow : sheet.getLastRow() + 1;
 
-  var id, timestamp, duplicateFlag, resumeLink = d.resumeLink, resumeShare = d.resumeShare;
+  var id, timestamp, duplicateFlag, previousResumeLink = "";
+  var resumeLink = d.resumeLink;
+  var resumeShare = d.resumeShare;
   if (resubmission) {
     id = String(sheet.getRange(row, col("Submission ID")).getValue()) || newSubmissionId();
     timestamp = sheet.getRange(row, col("Timestamp")).getValue() || now;
@@ -101,10 +122,7 @@ function upsertApplication(sheet, d, now) {
     var m = prev.match(/Resubmitted (\d+)/);
     var count = (m ? parseInt(m[1], 10) : 0) + 1;
     duplicateFlag = "Resubmitted " + count + (count === 1 ? " time" : " times") + ", last " + formatStamp(now);
-    if (!resumeLink) {
-      resumeLink = String(sheet.getRange(row, col("Resume link")).getValue());
-      resumeShare = String(sheet.getRange(row, col("OK to share resume")).getValue()) === "Yes";
-    }
+    previousResumeLink = String(sheet.getRange(row, col("Resume link")).getValue());
   } else {
     id = newSubmissionId();
     timestamp = now;
@@ -147,5 +165,5 @@ function upsertApplication(sheet, d, now) {
   // Decision and Team assignment are organizer-owned; never overwrite them.
   sheet.getRange(row, 1, 1, values.length).setValues([values]);
   sheet.getRange(row, col("Timestamp")).setNumberFormat("yyyy-mm-dd hh:mm");
-  return { id: id, row: row, resubmission: resubmission };
+  return { id: id, row: row, resubmission: resubmission, previousResumeLink: previousResumeLink };
 }

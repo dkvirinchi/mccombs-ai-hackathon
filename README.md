@@ -89,4 +89,5 @@ The site is static and lives on Vercel's free Hobby plan.
 | Applications close | Dec 15, 2026 |
 | Decisions out | Jan 22, 2027 |
 | Boot camp | Feb 5, 2027 |
-| Build window, demo day | TODO |
+| Build window | Feb 5 to 19, 2027 |
+| Demo day | Feb 19, 2027 |

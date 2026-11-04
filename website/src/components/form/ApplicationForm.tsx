@@ -339,7 +339,7 @@ function StepView({ step, values, resume, setResume, errors, update, onNext, onB
       const options = optionsFor(key);
       return (
         <Question label={label} help={meta.help} onNext={onNext} onBack={onBack} nextLabel={nextLabel} note={note} nextDisabled={!value}>
-          <SelectCards label={label} options={options} value={value} onChange={(v) => update(key, v as never)} error={error} columns={options.length > 3 && options.length !== 5 ? 2 : 1} />
+          <SelectCards label={label} options={options} value={value} onChange={(v) => update(key, v as never)} error={error} columns={step.columns ?? 1} />
         </Question>
       );
     }
