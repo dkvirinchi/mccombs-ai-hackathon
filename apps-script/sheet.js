@@ -138,7 +138,6 @@ function upsertApplication(sheet, d, now) {
     Number(d.aiComfort),
     resumeLink,
     resumeLink ? (resumeShare ? "Yes" : "No") : "",
-    d.consent ? "Yes" : "No",
     f.teamRows,
     f.captains,
     f.tier,

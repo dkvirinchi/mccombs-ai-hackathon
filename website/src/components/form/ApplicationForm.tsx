@@ -34,7 +34,7 @@ const fields = f.fields;
  * One-question-at-a-time application form (F-11 to F-14).
  * - Client-side validation with inline errors; submit disabled until the whole form is valid.
  * - Draft saved to localStorage on every change and restored on return (the resume file is not saved).
- * - Consent is a checkbox on the review screen, so the last question leads straight to review and submit.
+ * - The last question leads straight to the review screen, which has Submit.
  * - Open/close window from content/site.json; outside it the form shows a closed message.
  * - Posts to the Apps Script; shows confirmation, or keeps the answers on screen with a retry.
  */
@@ -199,7 +199,6 @@ export function ApplicationForm() {
             key="review"
             values={values}
             resumeName={resume?.name ?? ""}
-            onConsent={(v) => update("consent", v)}
             errors={errors}
             onEdit={edit}
             onBack={goBack}

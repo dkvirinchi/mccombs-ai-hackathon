@@ -23,7 +23,6 @@ const isTeam = (v: FormValues) => v.applyingAs === "team";
 /**
  * Order of questions. To add, remove or reorder a question, edit this list, then add its copy
  * under form.fields in content/site.json and its rule in lib/schema.ts and apps-script/validate.js.
- * Consent is not a step: it is a checkbox on the review screen, above Submit.
  */
 export const ALL_STEPS: Step[] = [
   {

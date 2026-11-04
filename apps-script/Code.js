@@ -103,7 +103,6 @@ function testSubmit() {
     buildExperience: "tried",
     aiComfort: "3",
     resumeShare: false,
-    consent: true,
     resume: null,
     hp: "",
   };

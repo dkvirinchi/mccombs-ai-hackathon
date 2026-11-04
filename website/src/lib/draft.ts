@@ -12,7 +12,7 @@ export function loadDraft(): Draft | null {
     const parsed = JSON.parse(raw) as Partial<Draft>;
     if (!parsed || typeof parsed !== "object" || !parsed.values) return null;
     return {
-      values: { ...emptyValues, ...parsed.values, consent: false },
+      values: { ...emptyValues, ...parsed.values },
       step: typeof parsed.step === "number" ? parsed.step : 0,
       savedAt: parsed.savedAt ?? "",
     };

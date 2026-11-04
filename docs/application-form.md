@@ -36,7 +36,6 @@ The apply page opens with four bullets (`form.introBullets`); `{closeDate}` and 
 | 14 | `buildExperience` | How much built with AI tools | 4 levels, Never to Built and run apps | Always |
 | 15 | `aiComfort` | Comfort with AI tools | 1 to 5. Baseline for the post-hackathon survey, which should ask the same question | Always |
 | 16 | `resume` + `resumeShare` | Resume upload | Optional PDF up to 5 MB, plus a separate opt-in to share with partners | `features.resumeUpload` is on |
-| | `consent` | Review screen | Checkbox above Submit, required | Always |
 
 A "pair" screen (1 and 2) shows two inputs; both are validated before moving on. Dates in screens 9 to 11 come from `dates.bootCamp`, `dates.bootCampTime`, `dates.buildWindow` and `dates.demoDay.date`, so changing a date there updates the questions.
 
@@ -44,7 +43,7 @@ Answers that no longer apply are cleared before sending (team fields for solo ap
 
 ## Sheet columns
 
-Timestamp, Submission ID, First name, Last name, EID, Email, Program, Applying as, Team name, Teammate emails, Captain, Captain commitment, Boot camp, Build window, Final presentation, Business area 1st, Business area 2nd, Business area 3rd, Other business areas (4th onward, in order), AI subscription, Build experience, AI comfort (1-5), Resume link, OK to share resume, Consent, then computed and organizer columns:
+Timestamp, Submission ID, First name, Last name, EID, Email, Program, Applying as, Team name, Teammate emails, Captain, Captain commitment, Boot camp, Build window, Final presentation, Business area 1st, Business area 2nd, Business area 3rd, Other business areas (4th onward, in order), AI subscription, Build experience, AI comfort (1-5), Resume link, OK to share resume, then computed and organizer columns:
 
 | Column | What it is |
 | --- | --- |

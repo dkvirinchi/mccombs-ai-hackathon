@@ -98,8 +98,6 @@ function validate(body) {
   d.resumeShare = !!d.resume && body.resumeShare === true;
   d.resumeLink = "";
 
-  d.consent = body.consent === true;
-  if (!d.consent) fields.consent = "We need your consent to process the application.";
 
   if (Object.keys(fields).length) return { ok: false, fields: fields };
   return { ok: true, data: d };

@@ -46,7 +46,6 @@ export const baseSchema = z.object({
   buildExperience: z.enum(values(opts.buildExperience), { message: err.required }),
   aiComfort: z.enum(values(opts.aiComfort), { message: err.required }),
   resumeShare: z.boolean().default(false),
-  consent: z.literal(true, { message: err.consent }),
 });
 
 type TeamFields = {
@@ -117,7 +116,6 @@ export type FormValues = {
   buildExperience: string;
   aiComfort: string;
   resumeShare: boolean;
-  consent: boolean;
 };
 
 export const emptyValues: FormValues = {
@@ -139,7 +137,6 @@ export const emptyValues: FormValues = {
   buildExperience: "",
   aiComfort: "",
   resumeShare: false,
-  consent: false,
 };
 
 /** Each form step edits one field, except the resume step, which edits the file plus resumeShare. */

@@ -76,7 +76,6 @@ var COLUMNS = [
   "AI comfort (1-5)",
   "Resume link",
   "OK to share resume",
-  "Consent",
   "Team rows found",
   "Captains on team",
   "Priority tier",

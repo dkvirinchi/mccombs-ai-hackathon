@@ -428,11 +428,6 @@
         "shareLabel": "OK to share my resume with program partners",
         "shareHelp": "Partner companies may be interested in participants. We only share your resume if you check this box.",
         "note": "Your file isn't saved in this browser. If you leave and come back, attach it again."
-      },
-      "consent": {
-        "label": "Consent",
-        "text": "I understand my application is used for hackathon selection and team placement, is shared only with the organizing team (and my resume with partners only if I opted in), and that EIDs and resumes are deleted 30 days after the final presentation.",
-        "checkboxLabel": "I agree"
       }
     },
     "options": {
@@ -599,7 +594,6 @@
       "teammateCount": "Add between 1 and 3 teammate emails.",
       "teammateSelf": "That's your own email. Add your teammates' emails instead.",
       "teammateDuplicate": "You've listed the same email twice.",
-      "consent": "We need your consent to process the application.",
       "useCases": "Pick at least 3 business areas.",
       "resumeType": "Please upload a PDF.",
       "resumeSize": "That file is over 5 MB. Please upload a smaller PDF.",
@@ -608,8 +602,7 @@
     "review": {
       "heading": "Check your answers",
       "body": "You can go back and change anything before you submit.",
-      "editLabel": "Edit",
-      "consentHeading": "Before you submit"
+      "editLabel": "Edit"
     },
     "closed": {
       "beforeOpen": {

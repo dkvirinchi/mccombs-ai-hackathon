@@ -5,12 +5,10 @@ import { content } from "@/lib/content";
 import type { FieldKey, FormValues } from "@/lib/schema";
 import { Button } from "@/components/layout/Button";
 import { activeSteps, fillDates, labelFor, stepFields } from "./steps";
-import { Checkbox } from "./fields/Checkbox";
 
 type Props = {
   values: FormValues;
   resumeName: string;
-  onConsent: (v: boolean) => void;
   errors: Partial<Record<FieldKey, string>>;
   onEdit: (key: FieldKey) => void;
   onBack: () => void;
@@ -29,10 +27,9 @@ function display(key: FieldKey, values: FormValues, resumeName: string): string 
   return String(v);
 }
 
-/** Every answer with an Edit link, then the consent checkbox and Submit. */
-export function Review({ values, resumeName, onConsent, errors, onEdit, onBack, onSubmit, submitting, canSubmit }: Props) {
+/** Every answer with an Edit link, then Submit. */
+export function Review({ values, resumeName, errors, onEdit, onBack, onSubmit, submitting, canSubmit }: Props) {
   const r = content.form.review;
-  const consent = content.form.fields.consent;
   const reduce = useReducedMotion();
   const fields = content.form.fields as Record<string, { label: string }>;
   const rows = activeSteps(values).flatMap(stepFields);
@@ -64,12 +61,7 @@ export function Review({ values, resumeName, onConsent, errors, onEdit, onBack, 
           );
         })}
       </dl>
-      <h3 className="mt-8 text-lg font-semibold text-charcoal">{r.consentHeading}</h3>
-      <p className="mt-1 text-base text-muted">{consent.text}</p>
-      <div className="mt-3">
-        <Checkbox checked={values.consent} onChange={onConsent} label={consent.checkboxLabel} error={errors.consent ?? null} />
-      </div>
-      <div className="mt-2 flex items-center gap-3">
+      <div className="mt-6 flex items-center gap-3">
         <Button variant="ghost" onClick={onBack} disabled={submitting}>
           {content.form.backCta}
         </Button>
