@@ -49,11 +49,11 @@
     "buildWindow": {
       "start": "2027-02-05",
       "end": "2027-02-19",
-      "label": "TODO Build week, dates coming soon"
+      "label": "Feb 5 to 19, 2027"
     },
     "demoDay": {
       "date": "2027-02-19",
-      "label": "TODO Demo day, date coming soon"
+      "label": "Thu, Feb 19, 2027"
     }
   },
   "contact": {
@@ -266,12 +266,12 @@
       },
       {
         "title": "Build",
-        "when": "TODO Build week dates",
+        "when": "Feb 5 to 19, 2027",
         "body": "One week to turn the problem into a working product. Mentors and office hours are available through the week. Teams work on their own schedule."
       },
       {
         "title": "Demo day",
-        "when": "TODO Demo day date",
+        "when": "Feb 19, 2027",
         "body": "Teams present to the partner companies, McCombs leadership and the Austin technology community. Winners are announced."
       }
     ]
@@ -594,6 +594,7 @@
       "useCases": "Pick at least 3 business areas.",
       "resumeType": "Please upload a PDF.",
       "resumeSize": "That file is over 5 MB. Please upload a smaller PDF.",
+      "resumeRead": "We couldn't read that file. Please choose it again.",
       "captainCommit": "Check the box to confirm, or go back and choose No."
     },
     "review": {

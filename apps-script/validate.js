@@ -91,7 +91,9 @@ function validate(body) {
   var r = body.resume;
   if (r && typeof r === "object") {
     var b64 = typeof r.base64 === "string" ? r.base64 : "";
-    if (r.mime !== "application/pdf" || !b64) fields.resume = "Please upload a PDF.";
+    // "JVBER" is base64 for "%PDF-", the header every PDF starts with. The mime type comes from the
+    // browser and is easy to fake by renaming a file, so check the bytes.
+    if (r.mime !== "application/pdf" || b64.indexOf("JVBER") !== 0) fields.resume = "Please upload a PDF.";
     else if (b64.length > RESUME_MAX_BASE64) fields.resume = "That file is over 5 MB. Please upload a smaller PDF.";
     else d.resume = { name: str(r.name).slice(0, 120) || "resume.pdf", base64: b64 };
   }

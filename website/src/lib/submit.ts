@@ -49,6 +49,15 @@ export function buildPayload(
   };
 }
 
+/**
+ * How long to wait for the Apps Script. A plain application is a few hundred bytes and answers
+ * in a few seconds. With a resume the body can be several MB of base64, and the script also
+ * writes the file to Drive, so allow a minute on top for slow phone connections.
+ */
+export function submitTimeoutMs(payload: SubmitPayload): number {
+  return payload.resume ? 90_000 : 20_000;
+}
+
 export async function submitApplication(payload: SubmitPayload): Promise<SubmitResponse> {
   if (!SCRIPT_URL) {
     // Review mode with no backend configured (usually local dev): pretend it worked so the
@@ -57,12 +66,13 @@ export async function submitApplication(payload: SubmitPayload): Promise<SubmitR
     return { ok: false, error: "config", message: "NEXT_PUBLIC_APPS_SCRIPT_URL is not set." };
   }
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 20_000);
+  const body = JSON.stringify(payload);
+  const timer = setTimeout(() => controller.abort(), submitTimeoutMs(payload));
   try {
     const res = await fetch(SCRIPT_URL, {
       method: "POST",
       headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify(payload),
+      body,
       redirect: "follow",
       signal: controller.signal,
     });

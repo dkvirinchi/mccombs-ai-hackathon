@@ -9,8 +9,8 @@
  *   PROD_SHEET_ID        Spreadsheet ID of the production Sheet
  *   TEST_SHEET_ID        Spreadsheet ID of the test Sheet (used by preview deploys and local dev)
  *   RESUME_FOLDER_ID     Drive folder ID for uploaded resumes (shared with organizers only)
- *   APPLICATIONS_OPEN    ISO date-time, e.g. 2027-01-11T09:00:00-06:00 (applies to prod only)
- *   APPLICATIONS_CLOSE   ISO date-time, e.g. 2027-01-25T23:59:00-06:00 (applies to prod only)
+ *   APPLICATIONS_OPEN    ISO date-time, must match dates.applicationsOpen in website/content/site.json, e.g. 2026-11-09T09:00:00-06:00 (prod only)
+ *   APPLICATIONS_CLOSE   ISO date-time, must match dates.applicationsClose in website/content/site.json, e.g. 2026-12-15T23:59:00-06:00 (prod only)
  *   SEND_EMAIL           "true" to send confirmation emails, anything else to skip
  *   FROM_NAME            Sender name shown in the confirmation email
  *   REPLY_TO             Reply-to address for the confirmation email

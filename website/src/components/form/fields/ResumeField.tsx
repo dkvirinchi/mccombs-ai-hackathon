@@ -17,6 +17,12 @@ type Props = {
 const copy = content.form.fields.resume;
 const err = content.form.errors;
 
+/** True when the file starts with the "%PDF-" header. The extension and mime type come from the file name and are easy to get wrong. */
+async function looksLikePdf(file: File): Promise<boolean> {
+  const head = await file.slice(0, 5).text();
+  return head === "%PDF-";
+}
+
 /** Read a File as base64 (without the data: prefix) so it can travel inside the JSON payload. */
 function toBase64(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -35,10 +41,16 @@ export function ResumeField({ file, onFile, share, onShare }: Props) {
 
   const choose = async (f: File | undefined) => {
     if (!f) return;
-    if (f.type !== "application/pdf" && !f.name.toLowerCase().endsWith(".pdf")) return setError(err.resumeType);
     if (f.size > RESUME_MAX_BYTES) return setError(err.resumeSize);
-    setError(null);
-    onFile({ name: f.name, mime: "application/pdf", base64: await toBase64(f), size: f.size });
+    try {
+      if (!(await looksLikePdf(f))) return setError(err.resumeType);
+      const base64 = await toBase64(f);
+      setError(null);
+      onFile({ name: f.name, mime: "application/pdf", base64, size: f.size });
+    } catch {
+      // FileReader can fail on a file that moved or is locked, or on a permissions error on iOS.
+      setError(err.resumeRead);
+    }
   };
 
   return (
