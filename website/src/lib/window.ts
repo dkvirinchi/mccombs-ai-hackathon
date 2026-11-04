@@ -2,10 +2,28 @@ import { content } from "./content";
 
 export type WindowState = "before" | "open" | "after";
 
-/** Application window from content/site.json. The Apps Script enforces the same dates server-side. */
+/**
+ * Review mode: the form is always open so organizers can try it before launch.
+ * True on Vercel preview deploys (the per-PR test links) and on `npm run dev`.
+ * Production is never in review mode, even if environment variables are missing,
+ * so the live site fails closed.
+ */
+export const REVIEW_MODE =
+  process.env.NEXT_PUBLIC_VERCEL_ENV === "preview" || process.env.NODE_ENV === "development";
+
+/**
+ * Whether the live form is open. Two switches in content/site.json, both must allow it:
+ *   1. features.applicationsLive: the on/off switch. While false, the form shows "opening soon".
+ *   2. dates.applicationsOpen / applicationsClose: the window once the switch is on.
+ * The Apps Script enforces the dates again server-side.
+ */
 export function applicationWindow(now: Date = new Date()): WindowState {
+  if (REVIEW_MODE) return "open";
+  if (!content.features.applicationsLive) return "before";
   const open = new Date(content.dates.applicationsOpen);
   const close = new Date(content.dates.applicationsClose);
+  // A placeholder or malformed date keeps the form closed rather than open.
+  if (Number.isNaN(open.getTime()) || Number.isNaN(close.getTime())) return "before";
   if (now < open) return "before";
   if (now > close) return "after";
   return "open";

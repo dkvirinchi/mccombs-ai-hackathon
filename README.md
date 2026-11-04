@@ -16,6 +16,21 @@ Every word, date and link on the site lives in **`website/content/site.json`**. 
 
 Values that start with `TODO` are placeholders waiting on a decision. They are outlined in orange on local and preview builds so they are easy to spot.
 
+## Opening and closing applications
+
+The live form is controlled by `features.applicationsLive` in `website/content/site.json`.
+
+| Where | What the form does |
+| --- | --- |
+| Live site, `applicationsLive: false` | Shows "Applications open soon". Nothing can be submitted. |
+| Live site, `applicationsLive: true` | Open between `dates.applicationsOpen` and `dates.applicationsClose`, closed outside them. A placeholder date keeps it closed. |
+| PR preview links (Vercel) | Always open, with a "Test mode" note. Submissions go to the TEST sheet. |
+| Local dev (`npm run dev`) | Always open, with a "Test mode" note. With no script URL set, Submit shows the confirmation screen without saving anything. |
+
+To launch: set the two dates, flip `applicationsLive` to `true`, and set the same dates in the Apps Script properties (`APPLICATIONS_OPEN`, `APPLICATIONS_CLOSE`). The script only enforces the window for production submissions; test-link submissions are accepted any time.
+
+Preview detection uses Vercel's `VERCEL_ENV`, exposed to the browser in `website/next.config.ts`. A production build without it still fails closed.
+
 ## Local development
 
 ```bash
@@ -70,7 +85,7 @@ The site is static and lives on Vercel's free Hobby plan.
 
 | Milestone | Date |
 | --- | --- |
-| Site launch, applications open | Nov 9, 2026 |
+| Site launch, applications open | TBD (form stays closed until `applicationsLive` is on) |
 | Applications close | Dec 4, 2026 |
 | Decisions out | Dec 11, 2026 |
 | Boot camp | Feb 5, 2027 |
