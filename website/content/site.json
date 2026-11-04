@@ -6,8 +6,8 @@
     "description": "A one-week build sprint in spring 2027 where McCombs MBA teams turn real company problems into working AI products. Boot camp on Feb 5, 2027. No coding experience required.",
     "url": "TODO https://mccombs-ai-hackathon.vercel.app",
     "ogImage": "/og.png",
-    "logo": "/logo.svg",
-    "logoAlt": "McCombs AI Hackathon"
+    "logo": "/logo.png",
+    "logoAlt": "MBA Tech Club"
   },
   "photos": {
     "_note": "Images live in website/public/photos. Keep alt text descriptive; captions and credits are shown on the page.",
