@@ -45,7 +45,7 @@ var LABELS = {
     none: "1 Never used an AI coding tool",
     tried: "2 Tried one by following along",
     prototype: "3 Built a working prototype",
-    shipped: "4 Built and run apps others use",
+    shipped: "4 Built and run apps",
   },
   aiComfort: { 1: "1", 2: "2", 3: "3", 4: "4", 5: "5" },
 };
@@ -70,10 +70,10 @@ var COLUMNS = [
   "Business area 1st",
   "Business area 2nd",
   "Business area 3rd",
+  "Other business areas",
   "AI subscription",
   "Build experience",
   "AI comfort (1-5)",
-  "Why",
   "Resume link",
   "OK to share resume",
   "Consent",
@@ -87,7 +87,7 @@ var COLUMNS = [
 
 var SHEET_NAME = "Applications";
 
-/** Confirmation email. {name}, {id}, {teamName}, {teamLink}, {decisionsBy} are replaced at send time. */
+/** Confirmation email. {name}, {id}, {teamName}, {decisionsBy} are replaced at send time. */
 var EMAIL = {
   subject: "We got your McCombs AI Hackathon application",
   // TODO: review copy with the organizing team before launch.
@@ -100,13 +100,9 @@ var EMAIL = {
     "Questions? Reply to this email.\n\n" +
     "The McCombs AI Hackathon organizing team",
   teamLine:
-    "Team: {teamName}. Every teammate needs to submit their own application with the same team name. " +
-    "This link fills it in for them: {teamLink}\n\n",
+    "Team: {teamName}. Remind each teammate to submit their own application with the same team name.\n\n",
   resubmitLine: "This replaces your earlier application. We'll use the newest answers.\n\n",
 };
-
-/** Public site address, used to build the teammate link in the email. */
-var SITE_URL = "https://mccombs-ai-hackathon.vercel.app";
 
 function col(name) {
   var i = COLUMNS.indexOf(name);

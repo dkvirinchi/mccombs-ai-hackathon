@@ -14,19 +14,12 @@ const values = (list: { value: string }[]) => list.map((o) => o.value) as [strin
 
 export const EID_RE = /^[a-z]{2,8}[0-9]{1,6}$/i;
 export const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-// Matches utexas.edu and any subdomain (my.utexas.edu, mccombs.utexas.edu), not lookalikes such as notutexas.edu.
-export const UT_DOMAIN_RE = /@([a-z0-9-]+\.)*utexas\.edu$/i;
 
-export const MAX_USE_CASES = 3;
+/** Minimum number of business areas to rank. Applicants may rank more, up to all of them. */
+export const MIN_USE_CASES = 3;
 export const RESUME_MAX_BYTES = 5 * 1024 * 1024;
 
-export const utEmail = z
-  .string()
-  .trim()
-  .toLowerCase()
-  .min(1, err.required)
-  .regex(EMAIL_RE, err.emailFormat)
-  .regex(UT_DOMAIN_RE, err.emailDomain);
+export const email = z.string().trim().toLowerCase().min(1, err.required).regex(EMAIL_RE, err.emailFormat);
 
 const personName = z.string().trim().min(1, err.nameLength).max(40, err.nameLength);
 const availability = z.enum(values(opts.availability), { message: err.required });
@@ -35,7 +28,7 @@ export const baseSchema = z.object({
   firstName: personName,
   lastName: personName,
   eid: z.string().trim().toLowerCase().min(1, err.required).regex(EID_RE, err.eidFormat),
-  email: utEmail,
+  email,
   program: z.enum(values(opts.program), { message: err.required }),
   applyingAs: z.enum(values(opts.applyingAs), { message: err.required }),
   teamName: z.string().trim().max(40, err.teamNameLength).default(""),
@@ -47,13 +40,11 @@ export const baseSchema = z.object({
   finalPresentation: availability,
   useCases: z
     .array(z.enum(values(opts.businessAreas)))
-    .min(1, err.useCases)
-    .max(MAX_USE_CASES, err.useCases)
+    .min(MIN_USE_CASES, err.useCases)
     .refine((a) => new Set(a).size === a.length, err.useCases),
   aiSubscription: z.enum(values(opts.aiSubscription), { message: err.required }),
   buildExperience: z.enum(values(opts.buildExperience), { message: err.required }),
   aiComfort: z.enum(values(opts.aiComfort), { message: err.required }),
-  why: z.string().trim().min(1, err.required).max(300, err.whyLength),
   resumeShare: z.boolean().default(false),
   consent: z.literal(true, { message: err.consent }),
 });
@@ -86,7 +77,6 @@ export function teamErrors(values: TeamFields): {
   let emailsError: string | null = null;
   if (emails.length < 1 || emails.length > 3) emailsError = err.teammateCount;
   else if (emails.some((e) => !EMAIL_RE.test(e))) emailsError = err.emailFormat;
-  else if (emails.some((e) => !UT_DOMAIN_RE.test(e))) emailsError = err.emailDomain;
   else if (emails.includes(self)) emailsError = err.teammateSelf;
   else if (new Set(emails).size !== emails.length) emailsError = err.teammateDuplicate;
 
@@ -126,7 +116,6 @@ export type FormValues = {
   aiSubscription: string;
   buildExperience: string;
   aiComfort: string;
-  why: string;
   resumeShare: boolean;
   consent: boolean;
 };
@@ -149,7 +138,6 @@ export const emptyValues: FormValues = {
   aiSubscription: "",
   buildExperience: "",
   aiComfort: "",
-  why: "",
   resumeShare: false,
   consent: false,
 };

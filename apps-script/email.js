@@ -13,10 +13,7 @@ function sendConfirmation(d, result) {
     id: result.id,
     teamName: d.teamName,
     decisionsBy: prop("DECISIONS_BY", "the decision date"),
-    teamLine:
-      d.applyingAs === "team"
-        ? fill(EMAIL.teamLine, { teamName: d.teamName, teamLink: SITE_URL + "/apply/?team=" + encodeURIComponent(d.teamName) })
-        : "",
+    teamLine: d.applyingAs === "team" ? fill(EMAIL.teamLine, { teamName: d.teamName }) : "",
   };
   var body = fill(EMAIL.body, vars);
   if (result.resubmission) body = body.replace("Your application is in.\n\n", "Your application is in.\n\n" + EMAIL.resubmitLine);

@@ -8,19 +8,20 @@ type Props = {
   value: string[];
   onChange: (v: string[]) => void;
   label: string;
-  max: number;
+  /** Optional cap on how many can be ranked. Omit to allow ranking every option. */
+  max?: number;
   error?: string | null;
 };
 
 /**
- * Ranked multi-select as tappable cards. Tapping adds an option at the next rank (1, 2, 3);
- * tapping a ranked option removes it and moves the ones after it up. Once `max` are picked,
- * the rest are disabled until one is removed.
+ * Ranked multi-select as tappable cards. Tapping adds an option at the next rank (1, 2, 3...);
+ * tapping a ranked option removes it and moves the ones after it up. If `max` is set, the rest
+ * are disabled once that many are picked.
  */
 export function RankCards({ options, value, onChange, label, max, error }: Props) {
   const id = useId();
   const errId = `${id}-err`;
-  const full = value.length >= max;
+  const full = max !== undefined && value.length >= max;
 
   const toggle = (v: string) => {
     if (value.includes(v)) onChange(value.filter((x) => x !== v));

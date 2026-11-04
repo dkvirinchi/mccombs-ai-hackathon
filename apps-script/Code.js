@@ -102,7 +102,6 @@ function testSubmit() {
     aiSubscription: "free",
     buildExperience: "tried",
     aiComfort: "3",
-    why: "Testing the pipeline.",
     resumeShare: false,
     consent: true,
     resume: null,

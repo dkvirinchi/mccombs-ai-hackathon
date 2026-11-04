@@ -3,12 +3,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence } from "motion/react";
 import { content, stripTodo } from "@/lib/content";
-import { emptyValues, MAX_USE_CASES, validateAll, validateField, type FieldKey, type FormValues } from "@/lib/schema";
+import { emptyValues, MIN_USE_CASES, validateAll, validateField, type FieldKey, type FormValues } from "@/lib/schema";
 import { clearDraft, loadDraft, saveDraft } from "@/lib/draft";
 import { buildPayload, submitApplication, type SubmitResponse } from "@/lib/submit";
 import { applicationWindow, formatDate, REVIEW_MODE, type WindowState } from "@/lib/window";
 import { Button } from "@/components/layout/Button";
-import { activeSteps, fillDates, optionsFor } from "./steps";
+import { activeSteps, fillDates, optionsFor, stepFields, type Step } from "./steps";
 import { Question } from "./Question";
 import { Review } from "./Review";
 import { Confirmation } from "./Confirmation";
@@ -30,20 +30,11 @@ type Status =
 const f = content.form;
 const fields = f.fields;
 
-/** Team name from a teammate's shared link (/apply/?team=Invoice%20Ninjas), if any. */
-function teamFromUrl(): string {
-  try {
-    return (new URLSearchParams(window.location.search).get("team") ?? "").trim().slice(0, 40);
-  } catch {
-    return "";
-  }
-}
-
 /**
  * One-question-at-a-time application form (F-11 to F-14).
  * - Client-side validation with inline errors; submit disabled until the whole form is valid.
  * - Draft saved to localStorage on every change and restored on return (the resume file is not saved).
- * - A ?team= link from a teammate pre-fills "With a team" and the team name.
+ * - Consent is a checkbox on the review screen, so the last question leads straight to review and submit.
  * - Open/close window from content/site.json; outside it the form shows a closed message.
  * - Posts to the Apps Script; shows confirmation, or keeps the answers on screen with a retry.
  */
@@ -60,16 +51,15 @@ export function ApplicationForm() {
   const topRef = useRef<HTMLDivElement>(null);
 
   // Hydrate from the browser once. The static HTML always renders the intro, so the server and
-  // client markup match; the window state, the saved draft and the ?team= link only exist in the browser.
+  // client markup match; the window state and the saved draft only exist in the browser.
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- one-time hydration from localStorage, the URL and the clock
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- one-time hydration from localStorage and the clock
     setWindowState(applicationWindow());
     const draft = loadDraft();
-    let next = draft ? draft.values : emptyValues;
-    const team = teamFromUrl();
-    if (team && !next.teamName) next = { ...next, applyingAs: "team", teamName: team };
-    setValues(next);
-    if (draft) setStepIndex(draft.step);
+    if (draft) {
+      setValues(draft.values);
+      setStepIndex(draft.step);
+    }
     setMounted(true);
   }, []);
 
@@ -90,9 +80,13 @@ export function ApplicationForm() {
 
   const goNext = () => {
     if (!step) return;
-    const err = validateField(values, step.key);
-    if (err) {
-      setErrors((prev) => ({ ...prev, [step.key]: err }));
+    const stepErrors: Partial<Record<FieldKey, string>> = {};
+    for (const key of stepFields(step)) {
+      const err = validateField(values, key);
+      if (err) stepErrors[key] = err;
+    }
+    if (Object.keys(stepErrors).length) {
+      setErrors((prev) => ({ ...prev, ...stepErrors }));
       return;
     }
     if (stepIndex + 1 >= total) setReviewing(true);
@@ -108,7 +102,7 @@ export function ApplicationForm() {
   };
 
   const edit = (key: FieldKey) => {
-    const i = steps.findIndex((s) => s.key === key);
+    const i = steps.findIndex((s) => stepFields(s).includes(key));
     if (i >= 0) {
       setReviewing(false);
       setStepIndex(i);
@@ -205,6 +199,7 @@ export function ApplicationForm() {
             key="review"
             values={values}
             resumeName={resume?.name ?? ""}
+            onConsent={(v) => update("consent", v)}
             errors={errors}
             onEdit={edit}
             onBack={goBack}
@@ -215,12 +210,11 @@ export function ApplicationForm() {
         ) : step ? (
           <StepView
             key={step.key}
-            stepKey={step.key}
-            kind={step.kind}
+            step={step}
             values={values}
             resume={resume}
             setResume={setResume}
-            error={errors[step.key] ?? null}
+            errors={errors}
             update={update}
             onNext={goNext}
             onBack={goBack}
@@ -262,24 +256,58 @@ function IntroBullets() {
 }
 
 type StepViewProps = {
-  stepKey: FieldKey;
-  kind: ReturnType<typeof activeSteps>[number]["kind"];
+  step: Step;
   values: FormValues;
   resume: ResumeFile | null;
   setResume: (f: ResumeFile | null) => void;
-  error: string | null;
+  errors: Partial<Record<FieldKey, string>>;
   update: <K extends keyof FormValues>(key: K, v: FormValues[K]) => void;
   onNext: () => void;
   onBack: () => void;
   isLast: boolean;
 };
 
-type FieldCopy = { label: string; help?: string; placeholder?: string; noNote?: string; text?: string; checkboxLabel?: string };
+type FieldCopy = { label: string; help?: string | string[]; placeholder?: string; noNote?: string; text?: string; checkboxLabel?: string };
 
-function StepView({ stepKey, kind, values, resume, setResume, error, update, onNext, onBack, isLast }: StepViewProps) {
-  const meta = fields[stepKey as keyof typeof fields] as FieldCopy;
+const copyFor = (key: string) => fields[key as keyof typeof fields] as FieldCopy;
+
+function StepView({ step, values, resume, setResume, errors, update, onNext, onBack, isLast }: StepViewProps) {
+  const { key: stepKey, kind } = step;
+  const meta = copyFor(step.heading ?? stepKey);
   const label = fillDates(meta.label);
   const nextLabel = isLast ? "Review answers" : undefined;
+  const error = errors[stepKey] ?? null;
+
+  if (kind === "pair" && step.pair) {
+    return (
+      <Question label={label} help={meta.help} onNext={onNext} onBack={onBack} nextLabel={nextLabel}>
+        <div className="space-y-2">
+          {step.pair.map((p, i) => {
+            const c = copyFor(p.key);
+            return (
+              <div key={p.key}>
+                <p aria-hidden className="mb-1.5 text-sm font-semibold text-charcoal">
+                  {c.label}
+                </p>
+                <TextField
+                  label={c.label}
+                  value={values[p.key]}
+                  onChange={(v) => update(p.key, v)}
+                  onEnter={onNext}
+                  placeholder={c.placeholder}
+                  error={errors[p.key] ?? null}
+                  type={p.type}
+                  inputMode={p.type === "email" ? "email" : "text"}
+                  autoComplete={p.autoComplete}
+                  autoFocus={i === 0}
+                />
+              </div>
+            );
+          })}
+        </div>
+      </Question>
+    );
+  }
 
   if (kind === "resume") {
     return (
@@ -292,7 +320,6 @@ function StepView({ stepKey, kind, values, resume, setResume, error, update, onN
   const key = stepKey as keyof FormValues;
   switch (kind) {
     case "text":
-    case "email":
       return (
         <Question label={label} help={meta.help} onNext={onNext} onBack={onBack} nextLabel={nextLabel}>
           <TextField
@@ -302,17 +329,9 @@ function StepView({ stepKey, kind, values, resume, setResume, error, update, onN
             onEnter={onNext}
             placeholder={meta.placeholder}
             error={error}
-            type={kind === "email" ? "email" : "text"}
-            inputMode={kind === "email" ? "email" : "text"}
-            autoComplete={key === "firstName" ? "given-name" : key === "lastName" ? "family-name" : key === "email" ? "email" : "off"}
+            autoComplete="off"
             autoFocus
           />
-        </Question>
-      );
-    case "longtext":
-      return (
-        <Question label={label} help={meta.help} onNext={onNext} onBack={onBack} nextLabel={nextLabel}>
-          <TextField label={label} value={values.why} onChange={(v) => update("why", v)} placeholder={meta.placeholder} error={error} multiline maxLength={300} autoFocus />
         </Question>
       );
     case "select": {
@@ -327,8 +346,8 @@ function StepView({ stepKey, kind, values, resume, setResume, error, update, onN
     }
     case "rank":
       return (
-        <Question label={label} help={meta.help} onNext={onNext} onBack={onBack} nextLabel={nextLabel} nextDisabled={values.useCases.length === 0}>
-          <RankCards label={label} options={optionsFor("useCases")} value={values.useCases} onChange={(v) => update("useCases", v)} max={MAX_USE_CASES} error={error} />
+        <Question label={label} help={meta.help} onNext={onNext} onBack={onBack} nextLabel={nextLabel} nextDisabled={values.useCases.length < MIN_USE_CASES}>
+          <RankCards label={label} options={optionsFor("useCases")} value={values.useCases} onChange={(v) => update("useCases", v)} error={error} />
         </Question>
       );
     case "emails":
@@ -338,7 +357,6 @@ function StepView({ stepKey, kind, values, resume, setResume, error, update, onN
         </Question>
       );
     case "checkbox":
-    case "consent":
       return (
         <Question label={label} help={meta.text} onNext={onNext} onBack={onBack} nextLabel={nextLabel} nextDisabled={!values[key]}>
           <Checkbox checked={values[key] as boolean} onChange={(v) => update(key, v as never)} label={meta.checkboxLabel ?? "I agree"} error={error} />

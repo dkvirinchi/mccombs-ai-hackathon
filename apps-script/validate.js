@@ -5,9 +5,7 @@
 
 var EID_RE = /^[a-z]{2,8}[0-9]{1,6}$/i;
 var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-// utexas.edu and any subdomain (my.utexas.edu, mccombs.utexas.edu), not lookalikes such as notutexas.edu.
-var UT_DOMAIN_RE = /@([a-z0-9-]+\.)*utexas\.edu$/i;
-var MAX_USE_CASES = 3;
+var MIN_USE_CASES = 3; // applicants may rank more, up to all of them
 // A 5 MB PDF is about 6.7 million base64 characters.
 var RESUME_MAX_BASE64 = Math.ceil((5 * 1024 * 1024 * 4) / 3) + 4;
 
@@ -39,7 +37,6 @@ function validate(body) {
 
   d.email = str(body.email).toLowerCase();
   if (!EMAIL_RE.test(d.email)) fields.email = "That doesn't look like a valid email.";
-  else if (!UT_DOMAIN_RE.test(d.email)) fields.email = "Please use an email that ends in utexas.edu.";
 
   d.program = oneOf(body.program, LABELS.program);
   if (!d.program) fields.program = REQUIRED;
@@ -59,7 +56,6 @@ function validate(body) {
     var emails = raw.map(function (e) { return str(e).toLowerCase(); }).filter(function (e) { return e.length > 0; });
     if (emails.length < 1 || emails.length > 3) fields.teammateEmails = "Add between 1 and 3 teammate emails.";
     else if (emails.some(function (e) { return !EMAIL_RE.test(e); })) fields.teammateEmails = "That doesn't look like a valid email.";
-    else if (emails.some(function (e) { return !UT_DOMAIN_RE.test(e); })) fields.teammateEmails = "Please use an email that ends in utexas.edu.";
     else if (emails.indexOf(d.email) >= 0) fields.teammateEmails = "That's your own email. Add your teammates' emails instead.";
     else if (new Set(emails).size !== emails.length) fields.teammateEmails = "You've listed the same email twice.";
     d.teammateEmails = emails;
@@ -77,8 +73,8 @@ function validate(body) {
 
   var areas = Array.isArray(body.useCases) ? body.useCases : [];
   d.useCases = areas.filter(function (a) { return oneOf(a, LABELS.businessAreas); });
-  if (d.useCases.length < 1 || d.useCases.length > MAX_USE_CASES || d.useCases.length !== areas.length || new Set(d.useCases).size !== d.useCases.length) {
-    fields.useCases = "Pick at least one business area.";
+  if (d.useCases.length < MIN_USE_CASES || d.useCases.length !== areas.length || new Set(d.useCases).size !== d.useCases.length) {
+    fields.useCases = "Pick at least 3 business areas.";
   }
 
   d.aiSubscription = oneOf(body.aiSubscription, LABELS.aiSubscription);
@@ -89,10 +85,6 @@ function validate(body) {
 
   d.aiComfort = oneOf(body.aiComfort, LABELS.aiComfort);
   if (!d.aiComfort) fields.aiComfort = REQUIRED;
-
-  d.why = str(body.why);
-  if (d.why.length < 1) fields.why = REQUIRED;
-  else if (d.why.length > 300) fields.why = "Keep it to 300 characters.";
 
   // Resume is optional. Anything that is not a PDF under 5 MB is rejected with a field error.
   d.resume = null;

@@ -333,26 +333,31 @@
     "progressLabel": "Question {current} of {total}",
     "optionalTag": "Optional",
     "fields": {
+      "name": {
+        "label": "What's your name?"
+      },
       "firstName": {
-        "label": "What's your first name?",
+        "label": "First name",
         "placeholder": "Jane"
       },
       "lastName": {
-        "label": "And your last name?",
+        "label": "Last name",
         "placeholder": "Doe"
       },
+      "contact": {
+        "label": "Your UT EID and email",
+        "help": "This email will be used for all communications."
+      },
       "eid": {
-        "label": "What's your UT EID?",
+        "label": "UT EID",
         "placeholder": "abc123"
       },
       "email": {
-        "label": "What's your UT email?",
-        "help": "This email will be used for all communications.",
+        "label": "Email",
         "placeholder": "you@my.utexas.edu"
       },
       "program": {
-        "label": "Which program are you in?",
-        "help": "Full-time MBA students get priority. Everyone else is eligible."
+        "label": "Which program are you in?"
       },
       "applyingAs": {
         "label": "Are you applying with a team or on your own?",
@@ -360,24 +365,28 @@
       },
       "teamName": {
         "label": "What's your team name?",
-        "help": "Every teammate enters this exact name on their own application. Capitalization doesn't matter. After you apply, you'll get a link that fills it in for your teammates.",
+        "help": "Please have each team member apply and provide the same team name so we can match you.",
         "placeholder": "Invoice Ninjas"
       },
       "teammateEmails": {
-        "label": "What are your teammates' UT emails?",
-        "help": "1 to 3 addresses, not including yours (teams are 2 to 4 people). Each teammate still submits their own application.",
+        "label": "What are your teammates' emails?",
+        "help": "1 to 3 addresses, not including yours (teams are 2 to 4 people).",
         "placeholder": "teammate@utexas.edu",
         "addLabel": "Add another teammate",
         "removeLabel": "Remove"
       },
       "captain": {
         "label": "Will you be your team's captain?",
-        "help": "Each team needs one captain. The captain is the team's main point of contact: they make sure everyone shows up to the boot camp and final presentation and keep the team on track during the build. Ideally the captain is comfortable using AI build tools like Claude Code, Codex or Cursor. You don't need to be a software engineer."
+        "help": [
+          "As captain, you'll be the main point of contact and help guide your team.",
+          "We want every team to bring a mix of skills. Ideally the captain is comfortable using AI tools like Claude Code or Codex.",
+          "A technical background isn't required. Knowing each team's skill level helps us support every team in the best way."
+        ]
       },
       "captainCommit": {
-        "label": "Your commitment as captain",
-        "text": "As captain, you'll be our main contact for your team, make sure your team attends the boot camp and the final presentation, and keep the team moving during the build.",
-        "checkboxLabel": "I commit to being my team's captain"
+        "label": "Thanks for stepping up as captain",
+        "text": "Captains are our main point of contact, help the team show up for the boot camp and final presentation, and keep things moving during the build.",
+        "checkboxLabel": "I'm in as my team's captain"
       },
       "bootCamp": {
         "label": "The boot camp runs {bootCamp}, {bootCampTime} on campus. Will you be available to attend the full session?",
@@ -396,7 +405,7 @@
       },
       "useCases": {
         "label": "Which business areas interest you most?",
-        "help": "Pick up to 3, in order: tap your first choice first. Use cases aren't confirmed yet. We'll do our best to match your preferences, but we can't guarantee them."
+        "help": "Pick at least 3, in order of interest: tap your first choice first. Use cases aren't confirmed yet. We'll do our best to match your preferences, but we can't guarantee them."
       },
       "aiSubscription": {
         "label": "Do you pay for any AI tools today?",
@@ -410,11 +419,6 @@
         "label": "How comfortable are you using AI tools today?",
         "help": "We'll ask again after the hackathon to see how it changed."
       },
-      "why": {
-        "label": "Why do you want to do this?",
-        "help": "Up to 300 characters. A couple of sentences is plenty.",
-        "placeholder": "I want to…"
-      },
       "resume": {
         "label": "Upload your resume",
         "help": "Optional. PDF, up to 5 MB. It helps us understand the skills on each team.",
@@ -426,7 +430,7 @@
         "note": "Your file isn't saved in this browser. If you leave and come back, attach it again."
       },
       "consent": {
-        "label": "One last thing",
+        "label": "Consent",
         "text": "I understand my application is used for hackathon selection and team placement, is shared only with the organizing team (and my resume with partners only if I opted in), and that EIDs and resumes are deleted 30 days after the final presentation.",
         "checkboxLabel": "I agree"
       }
@@ -517,7 +521,7 @@
         },
         {
           "value": "shipped",
-          "label": "Built and run apps other people use",
+          "label": "Built and run apps",
           "description": "Something live that I maintain"
         }
       ],
@@ -590,15 +594,13 @@
       "required": "This one's required.",
       "nameLength": "Please enter a name between 1 and 40 characters.",
       "eidFormat": "An EID is letters followed by numbers, like abc123.",
-      "emailDomain": "Please use an email that ends in utexas.edu.",
       "emailFormat": "That doesn't look like a valid email.",
       "teamNameLength": "Team names are 2 to 40 characters.",
       "teammateCount": "Add between 1 and 3 teammate emails.",
       "teammateSelf": "That's your own email. Add your teammates' emails instead.",
       "teammateDuplicate": "You've listed the same email twice.",
-      "whyLength": "Keep it to 300 characters.",
       "consent": "We need your consent to process the application.",
-      "useCases": "Pick at least one business area.",
+      "useCases": "Pick at least 3 business areas.",
       "resumeType": "Please upload a PDF.",
       "resumeSize": "That file is over 5 MB. Please upload a smaller PDF.",
       "captainCommit": "Check the box to confirm, or go back and choose No."
@@ -606,7 +608,8 @@
     "review": {
       "heading": "Check your answers",
       "body": "You can go back and change anything before you submit.",
-      "editLabel": "Edit"
+      "editLabel": "Edit",
+      "consentHeading": "Before you submit"
     },
     "closed": {
       "beforeOpen": {
@@ -623,12 +626,8 @@
       "body": "A confirmation email is on its way to {email}. Seats are limited, so applying doesn't guarantee a spot. We'll email you by {decisionsBy} to let you know if you've been selected.",
       "resubmittedBody": "Your earlier application has been updated. The newest answers are the ones we will use.",
       "idLabel": "Reference",
-      "teamNote": "Each member of \"{teamName}\" needs to submit their own application with the same team name.",
-      "homeCta": "Back to the site",
-      "teamLinkHeading": "Send this link to your teammates",
-      "teamLinkBody": "It opens the application with your team name already filled in, so everyone's application matches.",
-      "copyLabel": "Copy link",
-      "copiedLabel": "Copied"
+      "teamNote": "Remind each member of \"{teamName}\" to submit their own application with the same team name.",
+      "homeCta": "Back to the site"
     },
     "failure": {
       "heading": "That didn't go through",
