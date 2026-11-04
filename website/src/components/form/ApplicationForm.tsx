@@ -3,12 +3,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence } from "motion/react";
 import { content, stripTodo } from "@/lib/content";
-import { emptyValues, validateAll, validateField, type FieldKey, type FormValues } from "@/lib/schema";
+import { emptyValues, MAX_USE_CASES, validateAll, validateField, type FieldKey, type FormValues } from "@/lib/schema";
 import { clearDraft, loadDraft, saveDraft } from "@/lib/draft";
 import { buildPayload, submitApplication, type SubmitResponse } from "@/lib/submit";
 import { applicationWindow, REVIEW_MODE, type WindowState } from "@/lib/window";
 import { Button } from "@/components/layout/Button";
-import { activeSteps, optionsFor } from "./steps";
+import { activeSteps, fillDates, optionsFor } from "./steps";
 import { Question } from "./Question";
 import { Review } from "./Review";
 import { Confirmation } from "./Confirmation";
@@ -18,6 +18,8 @@ import { TextField } from "./fields/TextField";
 import { SelectCards } from "./fields/SelectCards";
 import { EmailList } from "./fields/EmailList";
 import { Checkbox } from "./fields/Checkbox";
+import { RankCards } from "./fields/RankCards";
+import { ResumeField, type ResumeFile } from "./fields/ResumeField";
 
 type Status =
   | { kind: "idle" }
@@ -28,10 +30,20 @@ type Status =
 const f = content.form;
 const fields = f.fields;
 
+/** Team name from a teammate's shared link (/apply/?team=Invoice%20Ninjas), if any. */
+function teamFromUrl(): string {
+  try {
+    return (new URLSearchParams(window.location.search).get("team") ?? "").trim().slice(0, 40);
+  } catch {
+    return "";
+  }
+}
+
 /**
  * One-question-at-a-time application form (F-11 to F-14).
  * - Client-side validation with inline errors; submit disabled until the whole form is valid.
- * - Draft saved to localStorage on every change and restored on return.
+ * - Draft saved to localStorage on every change and restored on return (the resume file is not saved).
+ * - A ?team= link from a teammate pre-fills "With a team" and the team name.
  * - Open/close window from content/site.json; outside it the form shows a closed message.
  * - Posts to the Apps Script; shows confirmation, or keeps the answers on screen with a retry.
  */
@@ -39,6 +51,7 @@ export function ApplicationForm() {
   const [mounted, setMounted] = useState(false);
   const [windowState, setWindowState] = useState<WindowState>("open");
   const [values, setValues] = useState<FormValues>(emptyValues);
+  const [resume, setResume] = useState<ResumeFile | null>(null);
   const [stepIndex, setStepIndex] = useState(-1); // -1 = intro screen
   const [errors, setErrors] = useState<Partial<Record<FieldKey, string>>>({});
   const [status, setStatus] = useState<Status>({ kind: "idle" });
@@ -47,15 +60,16 @@ export function ApplicationForm() {
   const topRef = useRef<HTMLDivElement>(null);
 
   // Hydrate from the browser once. The static HTML always renders the intro, so the server and
-  // client markup match; the window state and the saved draft only exist in the browser.
+  // client markup match; the window state, the saved draft and the ?team= link only exist in the browser.
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- one-time hydration from localStorage and the clock
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- one-time hydration from localStorage, the URL and the clock
     setWindowState(applicationWindow());
     const draft = loadDraft();
-    if (draft) {
-      setValues(draft.values);
-      setStepIndex(draft.step);
-    }
+    let next = draft ? draft.values : emptyValues;
+    const team = teamFromUrl();
+    if (team && !next.teamName) next = { ...next, applyingAs: "team", teamName: team };
+    setValues(next);
+    if (draft) setStepIndex(draft.step);
     setMounted(true);
   }, []);
 
@@ -67,7 +81,7 @@ export function ApplicationForm() {
   const step = steps[stepIndex];
   const total = steps.length;
 
-  const update = useCallback(<K extends FieldKey>(key: K, v: FormValues[K]) => {
+  const update = useCallback(<K extends keyof FormValues>(key: K, v: FormValues[K]) => {
     setValues((prev) => ({ ...prev, [key]: v }));
     setErrors((prev) => (prev[key] ? { ...prev, [key]: undefined } : prev));
   }, []);
@@ -111,7 +125,7 @@ export function ApplicationForm() {
       return;
     }
     setStatus({ kind: "submitting" });
-    const res: SubmitResponse = await submitApplication(buildPayload(result.data, honeypot));
+    const res: SubmitResponse = await submitApplication(buildPayload(result.data, honeypot, resume));
     if (res.ok) {
       clearDraft();
       setStatus({ kind: "success", id: res.id, resubmission: res.resubmission });
@@ -154,9 +168,14 @@ export function ApplicationForm() {
     );
   }
 
+  const previewNote = REVIEW_MODE && (
+    <p className="mb-6 rounded-xl border border-charcoal/20 bg-limestone-soft px-4 py-3 text-sm font-medium text-charcoal">{f.previewNote}</p>
+  );
+
   if (stepIndex < 0 || !mounted) {
     return (
       <div ref={topRef}>
+        {mounted && previewNote}
         <h1 className="display text-5xl text-orange sm:text-6xl">{f.title}</h1>
         <p className="mt-5 max-w-xl text-lg text-ink">{f.intro}</p>
         <div className="mt-8">
@@ -170,9 +189,7 @@ export function ApplicationForm() {
 
   return (
     <div ref={topRef} className="scroll-mt-24">
-      {REVIEW_MODE && (
-        <p className="mb-6 rounded-xl border border-charcoal/20 bg-limestone-soft px-4 py-3 text-sm font-medium text-charcoal">{f.previewNote}</p>
-      )}
+      {previewNote}
       <ProgressBar current={reviewing ? total : stepIndex + 1} total={total} />
       {/* Honeypot: hidden from people, filled by bots. The script drops submissions where it is non-empty. */}
       <div aria-hidden className="absolute -left-[10000px] top-auto h-px w-px overflow-hidden">
@@ -187,6 +204,7 @@ export function ApplicationForm() {
           <Review
             key="review"
             values={values}
+            resumeName={resume?.name ?? ""}
             errors={errors}
             onEdit={edit}
             onBack={goBack}
@@ -195,7 +213,19 @@ export function ApplicationForm() {
             canSubmit={validation.ok}
           />
         ) : step ? (
-          <StepView key={step.key} stepKey={step.key} kind={step.kind} values={values} error={errors[step.key] ?? null} update={update} onNext={goNext} onBack={goBack} isLast={stepIndex + 1 >= total} />
+          <StepView
+            key={step.key}
+            stepKey={step.key}
+            kind={step.kind}
+            values={values}
+            resume={resume}
+            setResume={setResume}
+            error={errors[step.key] ?? null}
+            update={update}
+            onNext={goNext}
+            onBack={goBack}
+            isLast={stepIndex + 1 >= total}
+          />
         ) : null}
       </AnimatePresence>
     </div>
@@ -206,61 +236,83 @@ type StepViewProps = {
   stepKey: FieldKey;
   kind: ReturnType<typeof activeSteps>[number]["kind"];
   values: FormValues;
+  resume: ResumeFile | null;
+  setResume: (f: ResumeFile | null) => void;
   error: string | null;
-  update: <K extends FieldKey>(key: K, v: FormValues[K]) => void;
+  update: <K extends keyof FormValues>(key: K, v: FormValues[K]) => void;
   onNext: () => void;
   onBack: () => void;
   isLast: boolean;
 };
 
-function StepView({ stepKey, kind, values, error, update, onNext, onBack, isLast }: StepViewProps) {
-  const meta = fields[stepKey as keyof typeof fields] as { label: string; help?: string; placeholder?: string; noNote?: string; text?: string; checkboxLabel?: string };
+type FieldCopy = { label: string; help?: string; placeholder?: string; noNote?: string; text?: string; checkboxLabel?: string };
+
+function StepView({ stepKey, kind, values, resume, setResume, error, update, onNext, onBack, isLast }: StepViewProps) {
+  const meta = fields[stepKey as keyof typeof fields] as FieldCopy;
+  const label = fillDates(meta.label);
   const nextLabel = isLast ? "Review answers" : undefined;
 
+  if (kind === "resume") {
+    return (
+      <Question label={label} help={meta.help} onNext={onNext} onBack={onBack} nextLabel={nextLabel}>
+        <ResumeField file={resume} onFile={setResume} share={values.resumeShare} onShare={(v) => update("resumeShare", v)} />
+      </Question>
+    );
+  }
+
+  const key = stepKey as keyof FormValues;
   switch (kind) {
     case "text":
     case "email":
       return (
-        <Question label={meta.label} help={meta.help} onNext={onNext} onBack={onBack} nextLabel={nextLabel}>
+        <Question label={label} help={meta.help} onNext={onNext} onBack={onBack} nextLabel={nextLabel}>
           <TextField
-            label={meta.label}
-            value={values[stepKey] as string}
-            onChange={(v) => update(stepKey, v as never)}
+            label={label}
+            value={values[key] as string}
+            onChange={(v) => update(key, v as never)}
             onEnter={onNext}
             placeholder={meta.placeholder}
             error={error}
             type={kind === "email" ? "email" : "text"}
             inputMode={kind === "email" ? "email" : "text"}
-            autoComplete={stepKey === "name" ? "name" : stepKey === "email" ? "email" : "off"}
+            autoComplete={key === "firstName" ? "given-name" : key === "lastName" ? "family-name" : key === "email" ? "email" : "off"}
             autoFocus
           />
         </Question>
       );
     case "longtext":
       return (
-        <Question label={meta.label} help={meta.help} onNext={onNext} onBack={onBack} nextLabel={nextLabel}>
-          <TextField label={meta.label} value={values.why} onChange={(v) => update("why", v)} placeholder={meta.placeholder} error={error} multiline maxLength={300} autoFocus />
+        <Question label={label} help={meta.help} onNext={onNext} onBack={onBack} nextLabel={nextLabel}>
+          <TextField label={label} value={values.why} onChange={(v) => update("why", v)} placeholder={meta.placeholder} error={error} multiline maxLength={300} autoFocus />
         </Question>
       );
     case "select": {
-      const value = values[stepKey] as string;
-      const note = stepKey === "feb5" && value === "no" ? (meta.noNote ?? null) : null;
+      const value = values[key] as string;
+      const note = value === "no" ? (meta.noNote ?? null) : null;
+      const options = optionsFor(key);
       return (
-        <Question label={meta.label} help={meta.help} onNext={onNext} onBack={onBack} nextLabel={nextLabel} note={note} nextDisabled={!value}>
-          <SelectCards label={meta.label} options={optionsFor(stepKey)} value={value} onChange={(v) => update(stepKey, v as never)} error={error} columns={optionsFor(stepKey).length > 3 ? 2 : 1} />
+        <Question label={label} help={meta.help} onNext={onNext} onBack={onBack} nextLabel={nextLabel} note={note} nextDisabled={!value}>
+          <SelectCards label={label} options={options} value={value} onChange={(v) => update(key, v as never)} error={error} columns={options.length > 3 && options.length !== 5 ? 2 : 1} />
         </Question>
       );
     }
+    case "rank":
+      return (
+        <Question label={label} help={meta.help} onNext={onNext} onBack={onBack} nextLabel={nextLabel} nextDisabled={values.useCases.length === 0}>
+          <RankCards label={label} options={optionsFor("useCases")} value={values.useCases} onChange={(v) => update("useCases", v)} max={MAX_USE_CASES} error={error} />
+        </Question>
+      );
     case "emails":
       return (
-        <Question label={meta.label} help={meta.help} onNext={onNext} onBack={onBack} nextLabel={nextLabel}>
+        <Question label={label} help={meta.help} onNext={onNext} onBack={onBack} nextLabel={nextLabel}>
           <EmailList values={values.teammateEmails} onChange={(v) => update("teammateEmails", v)} onEnter={onNext} error={error} max={3} />
         </Question>
       );
+    case "checkbox":
     case "consent":
       return (
-        <Question label={meta.label} help={meta.text} onNext={onNext} onBack={onBack} nextLabel={nextLabel} nextDisabled={!values.consent}>
-          <Checkbox checked={values.consent} onChange={(v) => update("consent", v)} label={meta.checkboxLabel ?? "I agree"} error={error} />
+        <Question label={label} help={meta.text} onNext={onNext} onBack={onBack} nextLabel={nextLabel} nextDisabled={!values[key]}>
+          <Checkbox checked={values[key] as boolean} onChange={(v) => update(key, v as never)} label={meta.checkboxLabel ?? "I agree"} error={error} />
         </Question>
       );
   }

@@ -10,7 +10,7 @@ import { REVIEW_MODE } from "./window";
  */
 
 export type SubmitPayload = Application & {
-  v: 1;
+  v: 2;
   env: "prod" | "preview";
   resume: null | { name: string; mime: string; base64: string };
   hp: string;
@@ -27,14 +27,24 @@ export const SCRIPT_URL = process.env.NEXT_PUBLIC_APPS_SCRIPT_URL ?? "";
 export const SUBMIT_ENV: "prod" | "preview" =
   !REVIEW_MODE && process.env.NEXT_PUBLIC_ENV === "prod" ? "prod" : "preview";
 
-export function buildPayload(app: Application, honeypot: string): SubmitPayload {
+/** Clear answers that no longer apply (team fields for solo applicants, captain commitment for non-captains). */
+export function buildPayload(
+  app: Application,
+  honeypot: string,
+  resume: { name: string; mime: string; base64: string } | null,
+): SubmitPayload {
+  const team = app.applyingAs === "team";
+  const captain = team ? app.captain : "";
   return {
     ...app,
-    teammateEmails: app.applyingAs === "team" ? app.teammateEmails.filter(Boolean) : [],
-    teamName: app.applyingAs === "team" ? app.teamName : "",
-    v: 1,
+    teammateEmails: team ? app.teammateEmails.filter(Boolean) : [],
+    teamName: team ? app.teamName : "",
+    captain,
+    captainCommit: captain === "yes" && app.captainCommit,
+    resumeShare: resume ? app.resumeShare : false,
+    v: 2,
     env: SUBMIT_ENV,
-    resume: null,
+    resume: resume ? { name: resume.name, mime: resume.mime, base64: resume.base64 } : null,
     hp: honeypot,
   };
 }

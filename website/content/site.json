@@ -45,13 +45,14 @@
     "applicationsClose": "2026-12-04T23:59:00-06:00",
     "decisionsBy": "2026-12-11",
     "bootCamp": "2027-02-05",
+    "bootCampTime": "9 AM to 3 PM",
     "buildWindow": {
-      "start": "TODO",
-      "end": "TODO",
+      "start": "2027-02-05",
+      "end": "2027-02-19",
       "label": "TODO Build week, dates coming soon"
     },
     "demoDay": {
-      "date": "TODO",
+      "date": "2027-02-19",
       "label": "TODO Demo day, date coming soon"
     }
   },
@@ -62,7 +63,7 @@
   "features": {
     "_note": "applicationsLive is the on/off switch for the live application form. Leave it false until launch; flip to true and set dates.applicationsOpen/applicationsClose to open it. Test links (PR previews) and local dev always show the form.",
     "applicationsLive": false,
-    "resumeUpload": false,
+    "resumeUpload": true,
     "banner": false,
     "seatMeter": false
   },
@@ -318,7 +319,7 @@
   },
   "form": {
     "title": "Apply",
-    "intro": "About three minutes, one question at a time. Your answers are saved in this browser so you can return later.",
+    "intro": "About five minutes, one question at a time. Your answers are saved in this browser so you can come back later. Seats are limited, so applying doesn't guarantee a spot. We'll email everyone once selections are made.",
     "startCta": "Start",
     "nextCta": "Next",
     "backCta": "Back",
@@ -327,10 +328,13 @@
     "progressLabel": "Question {current} of {total}",
     "optionalTag": "Optional",
     "fields": {
-      "name": {
-        "label": "What's your full name?",
-        "help": "As it appears on your UT record.",
-        "placeholder": "Jane Doe"
+      "firstName": {
+        "label": "What's your first name?",
+        "placeholder": "Jane"
+      },
+      "lastName": {
+        "label": "And your last name?",
+        "placeholder": "Doe"
       },
       "eid": {
         "label": "What's your UT EID?",
@@ -339,45 +343,68 @@
       },
       "email": {
         "label": "What's your UT email?",
-        "help": "Must end in utexas.edu. Decisions go to this address.",
-        "placeholder": "you@utexas.edu"
+        "help": "Any address ending in utexas.edu, like you@my.utexas.edu. We'll send your decision here.",
+        "placeholder": "you@my.utexas.edu"
       },
       "program": {
         "label": "Which program are you in?",
         "help": "Full-time MBA students get priority. Everyone else is eligible."
       },
-      "feb5": {
-        "label": "Can you attend the full boot camp on Friday, Feb 5, 2027?",
-        "help": "The boot camp runs all day on campus. Full attendance is required.",
-        "noNote": "Full attendance at the boot camp is required for selection. You can still submit, but you won't be selected unless this changes."
-      },
-      "week": {
-        "label": "Are you available for the rest of hackathon week?",
-        "help": "TODO Build week dates coming soon. Teams build on their own schedule; plan on 15 to 25 hours."
-      },
       "applyingAs": {
-        "label": "Are you applying with a team or solo?",
-        "help": "Teams are two to four people and are preferred in selection. Individual applicants are placed on a team."
+        "label": "Are you applying with a team or on your own?",
+        "help": "Teams are 2 to 4 people and are preferred in selection."
       },
       "teamName": {
         "label": "What's your team name?",
-        "help": "Every teammate enters this same name on their own application. Capitalization doesn't matter.",
+        "help": "Every teammate enters this exact name on their own application. Capitalization doesn't matter. After you apply, you'll get a link that fills it in for your teammates.",
         "placeholder": "Invoice Ninjas"
       },
       "teammateEmails": {
         "label": "What are your teammates' UT emails?",
-        "help": "One to three addresses, not including yours. Each teammate still submits their own application.",
+        "help": "1 to 3 addresses, not including yours (teams are 2 to 4 people). Each teammate still submits their own application.",
         "placeholder": "teammate@utexas.edu",
         "addLabel": "Add another teammate",
         "removeLabel": "Remove"
       },
+      "captain": {
+        "label": "Will you be your team's captain?",
+        "help": "Each team needs one captain. The captain is the team's main point of contact: they make sure everyone shows up to the boot camp and final presentation and keep the team on track during the build. Ideally the captain is comfortable using AI build tools like Claude Code, Codex or Cursor. You don't need to be a software engineer."
+      },
+      "captainCommit": {
+        "label": "Your commitment as captain",
+        "text": "As captain, you'll be our main contact for your team, make sure your team attends the boot camp and the final presentation, and keep the team moving during the build.",
+        "checkboxLabel": "I commit to being my team's captain"
+      },
+      "bootCamp": {
+        "label": "The boot camp runs {bootCamp}, {bootCampTime} on campus. Will you be available to attend the full session?",
+        "help": "Full attendance is required. Every participant gets their tools and their use case here.",
+        "noNote": "Full attendance at the boot camp is required for selection. You can still apply, but you won't be selected unless this changes."
+      },
+      "buildWindow": {
+        "label": "The hackathon build runs {buildStart} to {buildEnd}. Will you have time to work on your use case during this period?",
+        "help": "Teams build on their own schedule, with mentors available along the way.",
+        "noNote": "Teams count on every member during the build. You can still apply, but confirmed availability is prioritized."
+      },
+      "finalPresentation": {
+        "label": "The final presentation is {finalPresentation}. Will you be available to attend?",
+        "help": "Finalist teams present to a panel of alumni judges. Hold the date in case your team is selected.",
+        "noNote": "Finalist teams present in person. You can still apply, but confirmed availability is prioritized."
+      },
+      "useCases": {
+        "label": "Which business areas interest you most?",
+        "help": "Pick up to 3, in order: tap your first choice first. Use cases aren't confirmed yet. We'll do our best to match your preferences, but we can't guarantee them."
+      },
       "aiSubscription": {
-        "label": "What AI tools do you use today?",
-        "help": "Choose the closest match. This helps us balance teams and plan support."
+        "label": "Do you pay for any AI tools today?",
+        "help": "Choose the closest match. This helps us plan tool access and support."
       },
       "buildExperience": {
-        "label": "Have you built anything with AI or no-code tools before?",
-        "help": "This helps us place individual applicants on balanced teams."
+        "label": "How much have you built with AI tools?",
+        "help": "There's no wrong answer. This helps us balance teams."
+      },
+      "aiComfort": {
+        "label": "How comfortable are you using AI tools today?",
+        "help": "We'll ask again after the hackathon to see how it changed."
       },
       "why": {
         "label": "Why do you want to do this?",
@@ -386,11 +413,17 @@
       },
       "resume": {
         "label": "Upload your resume",
-        "help": "PDF, up to 5 MB. Optional."
+        "help": "Optional. PDF, up to 5 MB. It helps us understand the skills on each team.",
+        "chooseLabel": "Choose a PDF",
+        "replaceLabel": "Choose a different file",
+        "removeLabel": "Remove",
+        "shareLabel": "OK to share my resume with program partners",
+        "shareHelp": "Partner companies may be interested in participants. We only share your resume if you check this box.",
+        "note": "Your file isn't saved in this browser. If you leave and come back, attach it again."
       },
       "consent": {
         "label": "One last thing",
-        "text": "I understand my application data is used only for hackathon selection and team placement, is shared only with the organizing team, and is deleted 30 days after demo day.",
+        "text": "I understand my application is used for hackathon selection and team placement, is shared only with the organizing team (and my resume with partners only if I opted in), and that EIDs and resumes are deleted 30 days after the final presentation.",
         "checkboxLabel": "I agree"
       }
     },
@@ -416,7 +449,7 @@
         },
         {
           "value": "maybe",
-          "label": "Maybe"
+          "label": "Not sure yet"
         },
         {
           "value": "no",
@@ -427,12 +460,12 @@
         {
           "value": "team",
           "label": "With a team",
-          "description": "Two to four people. Each member applies."
+          "description": "A team of 2 to 4. Every member submits their own application with the same team name."
         },
         {
           "value": "solo",
-          "label": "Individually",
-          "description": "We place you on a team."
+          "label": "On my own",
+          "description": "We'll do our best to place you on a team of 2 to 4, but placement isn't guaranteed."
         }
       ],
       "aiSubscription": [
@@ -454,35 +487,104 @@
         {
           "value": "paid",
           "label": "Paid individual plan",
-          "description": "Pro, Plus or similar"
+          "description": "Claude Pro, ChatGPT Plus, Cursor or similar"
         },
         {
           "value": "power",
           "label": "Power-user plan",
-          "description": "Max or similar"
+          "description": "Claude Max, ChatGPT Pro or similar"
         }
       ],
       "buildExperience": [
         {
           "value": "none",
-          "label": "None",
-          "description": "This would be my first"
+          "label": "Never used an AI coding tool",
+          "description": "This would be my first time"
         },
         {
-          "value": "some",
-          "label": "Some",
-          "description": "No-code tools, tutorials or small experiments"
+          "value": "tried",
+          "label": "Tried one by following along",
+          "description": "A tutorial, class exercise or quick experiment"
+        },
+        {
+          "value": "prototype",
+          "label": "Built a working prototype on my own",
+          "description": "With tools like Claude Code, Codex, Cursor or Lovable"
         },
         {
           "value": "shipped",
-          "label": "I've shipped something",
-          "description": "People other than me have used it"
+          "label": "Built and run apps other people use",
+          "description": "Something live that I maintain"
+        }
+      ],
+      "captain": [
+        {
+          "value": "yes",
+          "label": "Yes, I'll be captain"
+        },
+        {
+          "value": "no",
+          "label": "No, a teammate is captain"
+        }
+      ],
+      "businessAreas": [
+        {
+          "value": "finance",
+          "label": "Finance",
+          "description": "Forecasting, reporting, investment analysis"
+        },
+        {
+          "value": "marketing",
+          "label": "Marketing",
+          "description": "Campaigns, content, customer insight"
+        },
+        {
+          "value": "operations",
+          "label": "Operations & supply chain",
+          "description": "Logistics, procurement, process automation"
+        },
+        {
+          "value": "hr",
+          "label": "HR & people",
+          "description": "Recruiting, onboarding, employee experience"
+        },
+        {
+          "value": "sales",
+          "label": "Sales",
+          "description": "Prospecting, CRM, pricing"
+        },
+        {
+          "value": "strategy",
+          "label": "Strategy",
+          "description": "Market research, competitive analysis, planning"
+        }
+      ],
+      "aiComfort": [
+        {
+          "value": "1",
+          "label": "1 · Not at all comfortable"
+        },
+        {
+          "value": "2",
+          "label": "2 · Slightly comfortable"
+        },
+        {
+          "value": "3",
+          "label": "3 · Somewhat comfortable"
+        },
+        {
+          "value": "4",
+          "label": "4 · Very comfortable"
+        },
+        {
+          "value": "5",
+          "label": "5 · Extremely comfortable"
         }
       ]
     },
     "errors": {
       "required": "This one's required.",
-      "nameLength": "Please enter your full name (2 to 80 characters).",
+      "nameLength": "Please enter a name between 1 and 40 characters.",
       "eidFormat": "An EID is letters followed by numbers, like abc123.",
       "emailDomain": "Please use an email that ends in utexas.edu.",
       "emailFormat": "That doesn't look like a valid email.",
@@ -491,7 +593,11 @@
       "teammateSelf": "That's your own email. Add your teammates' emails instead.",
       "teammateDuplicate": "You've listed the same email twice.",
       "whyLength": "Keep it to 300 characters.",
-      "consent": "We need your consent to process the application."
+      "consent": "We need your consent to process the application.",
+      "useCases": "Pick at least one business area.",
+      "resumeType": "Please upload a PDF.",
+      "resumeSize": "That file is over 5 MB. Please upload a smaller PDF.",
+      "captainCommit": "Check the box to confirm, or go back and choose No."
     },
     "review": {
       "heading": "Check your answers",
@@ -510,11 +616,15 @@
     },
     "confirmation": {
       "heading": "Application received.",
-      "body": "A confirmation email is on its way to {email}. Decisions go out by {decisionsBy}.",
+      "body": "A confirmation email is on its way to {email}. Seats are limited, so applying doesn't guarantee a spot. We'll email you by {decisionsBy} to let you know if you've been selected.",
       "resubmittedBody": "Your earlier application has been updated. The newest answers are the ones we will use.",
       "idLabel": "Reference",
       "teamNote": "Each member of \"{teamName}\" needs to submit their own application with the same team name.",
-      "homeCta": "Back to the site"
+      "homeCta": "Back to the site",
+      "teamLinkHeading": "Send this link to your teammates",
+      "teamLinkBody": "It opens the application with your team name already filled in, so everyone's application matches.",
+      "copyLabel": "Copy link",
+      "copiedLabel": "Copied"
     },
     "failure": {
       "heading": "That didn't go through",

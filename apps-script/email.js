@@ -9,11 +9,14 @@ function fill(template, vars) {
 function sendConfirmation(d, result) {
   if (prop("SEND_EMAIL", "false") !== "true") return false;
   var vars = {
-    name: d.name.split(" ")[0],
+    name: d.firstName,
     id: result.id,
     teamName: d.teamName,
-    decisionsBy: prop("DECISIONS_BY", "Dec 11, 2026"),
-    teamLine: d.applyingAs === "team" ? fill(EMAIL.teamLine, { teamName: d.teamName }) : "",
+    decisionsBy: prop("DECISIONS_BY", "the decision date"),
+    teamLine:
+      d.applyingAs === "team"
+        ? fill(EMAIL.teamLine, { teamName: d.teamName, teamLink: SITE_URL + "/apply/?team=" + encodeURIComponent(d.teamName) })
+        : "",
   };
   var body = fill(EMAIL.body, vars);
   if (result.resubmission) body = body.replace("Your application is in.\n\n", "Your application is in.\n\n" + EMAIL.resubmitLine);

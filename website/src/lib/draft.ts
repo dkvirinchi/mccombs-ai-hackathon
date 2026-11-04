@@ -1,6 +1,6 @@
 import { emptyValues, type FormValues } from "./schema";
 
-const KEY = "mccombs-ai-hackathon:application-draft:v1";
+const KEY = "mccombs-ai-hackathon:application-draft:v2"; // bumped when the questions changed, so old drafts are ignored
 
 export type Draft = { values: FormValues; step: number; savedAt: string };
 

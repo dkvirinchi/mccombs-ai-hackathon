@@ -25,25 +25,28 @@ function writeHeaders(sheet) {
 
 /** Live formulas for the computed columns on a given row. */
 function computedFormulas(row) {
-  var J = colLetter("Team name");
-  var F = colLetter("Program");
-  var G = colLetter("Feb 5 availability");
-  var I = colLetter("Applying as");
+  var team = colLetter("Team name");
+  var cap = colLetter("Captain");
+  var prog = colLetter("Program");
+  var boot = colLetter("Boot camp");
+  var as = colLetter("Applying as");
   var L = LABELS;
+  var sameTeam = "--(LOWER(TRIM($" + team + "$2:$" + team + "))=LOWER(TRIM(" + team + row + ")))";
 
-  var teamRows =
-    "=IF(" + J + row + '="","",SUMPRODUCT(--(LOWER(TRIM($' + J + "$2:$" + J + "))=LOWER(TRIM(" + J + row + ")))))";
+  var teamRows = "=IF(" + team + row + '="","",SUMPRODUCT(' + sameTeam + "))";
+  var captains = "=IF(" + team + row + '="","",SUMPRODUCT(' + sameTeam + ",--($" + cap + "$2:$" + cap + '="' + L.captain.yes + '")))';
 
+  // Priority rules from the PRD. Organizers can edit this formula in the Sheet.
   var tier =
     "=IFS(" +
-    G + row + '="' + L.availability.no + '","0 Excluded (Feb 5 No)",' +
-    "AND(" + F + row + '="' + L.program.fulltime_mba + '",' + I + row + '="' + L.applyingAs.team + '",' + G + row + '="' + L.availability.yes + '"),"1 Full-time team, Yes",' +
-    "AND(" + I + row + '="' + L.applyingAs.team + '",' + G + row + '="' + L.availability.yes + '"),"2 Other team, Yes",' +
-    "AND(" + I + row + '="' + L.applyingAs.solo + '",' + G + row + '="' + L.availability.yes + '"),"3 Solo, Yes",' +
-    G + row + '="' + L.availability.maybe + '","4 Maybe",' +
+    boot + row + '="' + L.availability.no + '","0 Excluded (boot camp No)",' +
+    "AND(" + prog + row + '="' + L.program.fulltime_mba + '",' + as + row + '="' + L.applyingAs.team + '",' + boot + row + '="' + L.availability.yes + '"),"1 Full-time team, Yes",' +
+    "AND(" + as + row + '="' + L.applyingAs.team + '",' + boot + row + '="' + L.availability.yes + '"),"2 Other team, Yes",' +
+    "AND(" + as + row + '="' + L.applyingAs.solo + '",' + boot + row + '="' + L.availability.yes + '"),"3 Solo, Yes",' +
+    boot + row + '="' + L.availability.maybe + '","4 Not sure",' +
     'TRUE,"")';
 
-  return { teamRows: teamRows, tier: tier };
+  return { teamRows: teamRows, captains: captains, tier: tier };
 }
 
 function findRowByEid(sheet, eid) {
@@ -65,8 +68,24 @@ function formatStamp(date) {
 }
 
 /**
+ * Save an uploaded resume to the RESUME_FOLDER_ID Drive folder and return its link.
+ * Test-link submissions get a "[TEST]" prefix so they are easy to clean up.
+ * The folder inherits its sharing, so keep it shared with organizers only.
+ */
+function saveResume(d, env) {
+  if (!d.resume) return "";
+  var folderId = prop("RESUME_FOLDER_ID", "");
+  if (!folderId) return "Resume received, but RESUME_FOLDER_ID is not set";
+  var name = (env === "prod" ? "" : "[TEST] ") + d.lastName + ", " + d.firstName + " (" + d.eid + ").pdf";
+  var blob = Utilities.newBlob(Utilities.base64Decode(d.resume.base64), "application/pdf", name);
+  var file = DriveApp.getFolderById(folderId).createFile(blob);
+  return file.getUrl();
+}
+
+/**
  * Append or overwrite the applicant's row. Call inside a LockService lock.
- * Resubmissions keep the first Timestamp and Submission ID and bump the Duplicate flag.
+ * Resubmissions keep the first Timestamp, Submission ID and (if no new file) the earlier resume link,
+ * and bump the Duplicate flag.
  * @returns {{id: string, row: number, resubmission: boolean}}
  */
 function upsertApplication(sheet, d, now) {
@@ -74,7 +93,7 @@ function upsertApplication(sheet, d, now) {
   var resubmission = existingRow > 0;
   var row = resubmission ? existingRow : sheet.getLastRow() + 1;
 
-  var id, timestamp, duplicateFlag;
+  var id, timestamp, duplicateFlag, resumeLink = d.resumeLink, resumeShare = d.resumeShare;
   if (resubmission) {
     id = String(sheet.getRange(row, col("Submission ID")).getValue()) || newSubmissionId();
     timestamp = sheet.getRange(row, col("Timestamp")).getValue() || now;
@@ -82,6 +101,10 @@ function upsertApplication(sheet, d, now) {
     var m = prev.match(/Resubmitted (\d+)/);
     var count = (m ? parseInt(m[1], 10) : 0) + 1;
     duplicateFlag = "Resubmitted " + count + (count === 1 ? " time" : " times") + ", last " + formatStamp(now);
+    if (!resumeLink) {
+      resumeLink = String(sheet.getRange(row, col("Resume link")).getValue());
+      resumeShare = String(sheet.getRange(row, col("OK to share resume")).getValue()) === "Yes";
+    }
   } else {
     id = newSubmissionId();
     timestamp = now;
@@ -89,24 +112,35 @@ function upsertApplication(sheet, d, now) {
   }
 
   var f = computedFormulas(row);
+  var areas = d.useCases.map(function (a) { return LABELS.businessAreas[a]; });
   var values = [
     timestamp,
     id,
-    d.name,
+    d.firstName,
+    d.lastName,
     d.eid,
     d.email,
     LABELS.program[d.program],
-    LABELS.availability[d.feb5],
-    LABELS.availability[d.week],
     LABELS.applyingAs[d.applyingAs],
     d.teamName,
     d.teammateEmails.join(", "),
+    d.captain ? LABELS.captain[d.captain] : "",
+    d.captainCommit ? "Yes" : "",
+    LABELS.availability[d.bootCamp],
+    LABELS.availability[d.buildWindow],
+    LABELS.availability[d.finalPresentation],
+    areas[0] || "",
+    areas[1] || "",
+    areas[2] || "",
     LABELS.aiSubscription[d.aiSubscription],
     LABELS.buildExperience[d.buildExperience],
+    Number(d.aiComfort),
     d.why,
-    d.resumeLink,
+    resumeLink,
+    resumeLink ? (resumeShare ? "Yes" : "No") : "",
     d.consent ? "Yes" : "No",
     f.teamRows,
+    f.captains,
     f.tier,
     duplicateFlag,
   ];

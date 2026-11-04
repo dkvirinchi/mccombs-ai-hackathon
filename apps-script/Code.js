@@ -45,6 +45,8 @@ function doPost(e) {
 
     var env = body.env === "prod" ? "prod" : "preview";
     var sheet = openSheet(env);
+    v.data.resumeLink = saveResume(v.data, env); // outside the lock: Drive uploads can be slow
+    v.data.resume = null; // don't keep the file contents around once saved
 
     var lock = LockService.getScriptLock();
     lock.waitLock(30000);
@@ -81,20 +83,27 @@ function setup() {
 /** Dry run from the editor: writes one fake application to the TEST sheet. */
 function testSubmit() {
   var fake = {
-    v: 1,
+    v: 2,
     env: "preview",
-    name: "Test Applicant",
+    firstName: "Test",
+    lastName: "Applicant",
     eid: "tst123",
-    email: "test.applicant@utexas.edu",
+    email: "test.applicant@my.utexas.edu",
     program: "fulltime_mba",
-    feb5: "yes",
-    week: "maybe",
     applyingAs: "team",
     teamName: "Test Team",
     teammateEmails: ["teammate@utexas.edu"],
+    captain: "yes",
+    captainCommit: true,
+    bootCamp: "yes",
+    buildWindow: "yes",
+    finalPresentation: "maybe",
+    useCases: ["marketing", "finance", "strategy"],
     aiSubscription: "free",
-    buildExperience: "some",
+    buildExperience: "tried",
+    aiComfort: "3",
     why: "Testing the pipeline.",
+    resumeShare: false,
     consent: true,
     resume: null,
     hp: "",
