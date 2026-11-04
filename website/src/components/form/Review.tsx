@@ -4,10 +4,11 @@ import { motion, useReducedMotion } from "motion/react";
 import { content } from "@/lib/content";
 import type { FieldKey, FormValues } from "@/lib/schema";
 import { Button } from "@/components/layout/Button";
-import { activeSteps, labelFor } from "./steps";
+import { activeSteps, fillDates, labelFor, stepFields } from "./steps";
 
 type Props = {
   values: FormValues;
+  resumeName: string;
   errors: Partial<Record<FieldKey, string>>;
   onEdit: (key: FieldKey) => void;
   onBack: () => void;
@@ -16,18 +17,22 @@ type Props = {
   canSubmit: boolean;
 };
 
-function display(key: FieldKey, values: FormValues): string {
+function display(key: FieldKey, values: FormValues, resumeName: string): string {
+  if (key === "resume") return resumeName ? `${resumeName}${values.resumeShare ? " (OK to share with partners)" : ""}` : "None";
   const v = values[key];
-  if (key === "consent") return v ? "Agreed" : "Not yet";
+  if (key === "captainCommit") return v ? "Committed" : "Not yet";
   if (key === "teammateEmails") return (v as string[]).filter(Boolean).join(", ");
+  if (key === "useCases") return (v as string[]).map((x, i) => `${i + 1}. ${labelFor(key, x)}`).join("  ");
   if (typeof v === "string") return labelFor(key, v);
   return String(v);
 }
 
-export function Review({ values, errors, onEdit, onBack, onSubmit, submitting, canSubmit }: Props) {
+/** Every answer with an Edit link, then Submit. */
+export function Review({ values, resumeName, errors, onEdit, onBack, onSubmit, submitting, canSubmit }: Props) {
   const r = content.form.review;
   const reduce = useReducedMotion();
   const fields = content.form.fields as Record<string, { label: string }>;
+  const rows = activeSteps(values).flatMap(stepFields);
   return (
     <motion.div
       initial={reduce ? false : { opacity: 0, x: 24 }}
@@ -38,18 +43,18 @@ export function Review({ values, errors, onEdit, onBack, onSubmit, submitting, c
       <h2 className="display text-3xl text-charcoal sm:text-4xl">{r.heading}</h2>
       <p className="mt-3 text-base text-muted">{r.body}</p>
       <dl className="mt-6 divide-y divide-limestone rounded-2xl border border-limestone bg-white">
-        {activeSteps(values).map((s) => {
-          const err = errors[s.key];
+        {rows.map((key) => {
+          const err = errors[key];
           return (
-            <div key={s.key} className="flex items-start justify-between gap-4 px-4 py-3">
+            <div key={key} className="flex items-start justify-between gap-4 px-4 py-3">
               <div className="min-w-0">
-                <dt className="text-xs font-semibold uppercase tracking-wider text-muted">{fields[s.key].label}</dt>
+                <dt className="text-xs font-semibold uppercase tracking-wider text-muted">{fillDates(fields[key].label)}</dt>
                 <dd className={`mt-0.5 break-words text-base ${err ? "text-error" : "text-charcoal"}`}>
-                  {display(s.key, values) || "—"}
+                  {display(key, values, resumeName) || "—"}
                   {err && <span className="block text-sm font-medium text-error">{err}</span>}
                 </dd>
               </div>
-              <button type="button" onClick={() => onEdit(s.key)} className="shrink-0 text-sm font-semibold text-charcoal underline-offset-4 hover:underline">
+              <button type="button" onClick={() => onEdit(key)} className="shrink-0 text-sm font-semibold text-charcoal underline-offset-4 hover:underline">
                 {r.editLabel}
               </button>
             </div>

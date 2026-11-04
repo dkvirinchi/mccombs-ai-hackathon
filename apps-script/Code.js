@@ -45,15 +45,24 @@ function doPost(e) {
 
     var env = body.env === "prod" ? "prod" : "preview";
     var sheet = openSheet(env);
+    var newResumeLink = saveResume(v.data, env); // outside the lock: Drive uploads can be slow
+    v.data.resumeLink = newResumeLink;
+    v.data.resume = null; // don't keep the file contents around once saved
 
     var lock = LockService.getScriptLock();
     lock.waitLock(30000);
     var result;
     try {
       result = upsertApplication(sheet, v.data, now);
+    } catch (err) {
+      trashResume(newResumeLink); // the row was not written, so don't leave the file behind
+      throw err;
     } finally {
       lock.releaseLock();
     }
+    // A resubmission replaces the earlier resume (or withdraws it). Trash the old file so the
+    // folder only ever holds the file linked from the Sheet.
+    if (result.previousResumeLink && result.previousResumeLink !== newResumeLink) trashResume(result.previousResumeLink);
 
     sendConfirmation(v.data, result);
     return json({ ok: true, id: result.id, resubmission: result.resubmission });
@@ -81,21 +90,26 @@ function setup() {
 /** Dry run from the editor: writes one fake application to the TEST sheet. */
 function testSubmit() {
   var fake = {
-    v: 1,
+    v: 2,
     env: "preview",
-    name: "Test Applicant",
+    firstName: "Test",
+    lastName: "Applicant",
     eid: "tst123",
-    email: "test.applicant@utexas.edu",
+    email: "test.applicant@my.utexas.edu",
     program: "fulltime_mba",
-    feb5: "yes",
-    week: "maybe",
     applyingAs: "team",
     teamName: "Test Team",
     teammateEmails: ["teammate@utexas.edu"],
+    captain: "yes",
+    captainCommit: true,
+    bootCamp: "yes",
+    buildWindow: "yes",
+    finalPresentation: "maybe",
+    useCases: ["marketing", "finance", "strategy"],
     aiSubscription: "free",
-    buildExperience: "some",
-    why: "Testing the pipeline.",
-    consent: true,
+    buildExperience: "tried",
+    aiComfort: "3",
+    resumeShare: false,
     resume: null,
     hp: "",
   };

@@ -20,14 +20,15 @@ A tiny web app that takes the form's JSON, validates it, writes one row per appl
    | --- | --- |
    | `PROD_SHEET_ID` | production spreadsheet ID |
    | `TEST_SHEET_ID` | test spreadsheet ID |
-   | `APPLICATIONS_OPEN` | `2026-11-09T09:00:00-06:00` |
-   | `APPLICATIONS_CLOSE` | `2026-12-04T23:59:00-06:00` |
+   | `RESUME_FOLDER_ID` | Drive folder ID for resumes (from the folder URL), shared with organizers only |
+   | `APPLICATIONS_OPEN` | `2026-11-09T09:00:00-06:00` (same as `dates.applicationsOpen` in `site.json`) |
+   | `APPLICATIONS_CLOSE` | `2026-12-15T23:59:00-06:00` (same as `dates.applicationsClose` in `site.json`) |
    | `SEND_EMAIL` | `false` until launch, then `true` |
    | `FROM_NAME` | `McCombs AI Hackathon` |
    | `REPLY_TO` | organizer inbox |
-   | `DECISIONS_BY` | `Dec 11, 2026` |
+   | `DECISIONS_BY` | Human-readable date, `Jan 22, 2027` |
 
-   The open and close dates must match `website/content/site.json`. The site hides the form outside the window; the script rejects anything that still arrives.
+   The open and close dates must match `website/content/site.json`. The site hides the form outside the window; the script rejects any **production** submission that still arrives. Test-link submissions (`env: "preview"`) are accepted any time and go to the TEST sheet.
 5. **Run `setup`** from the editor (pick `setup` in the function dropdown, Run). Approve the permissions. Both sheets get a frozen header row.
 6. **Run `testSubmit`** to write one fake row to the TEST sheet and check the computed columns.
 7. **Deploy:** Deploy > New deployment > Web app. Execute as **Me**, who has access **Anyone**. Copy the URL ending in `/exec`.
@@ -47,10 +48,19 @@ Then Deploy > Manage deployments > edit the existing deployment > New version. T
 
 - `Code.js` handles `doPost`: honeypot check, open window, `validate()`, LockService lock, `upsertApplication()`, `sendConfirmation()`.
 - `validate.js` mirrors the rules in `website/src/lib/schema.ts`. Change both together.
-- `sheet.js` finds an existing row by EID. A resubmission overwrites the row, keeps the first timestamp and ID, and sets the Duplicate flag. Decision and Team assignment are never touched.
+- `sheet.js` finds an existing row by EID. A resubmission overwrites the row, keeps the first timestamp and ID, and sets the Duplicate flag. The resume is replaced by whatever the new submission carries: a new file replaces the old one in Drive, and no file withdraws it (the old file is trashed and the share opt-in cleared). Decision and Team assignment are never touched.
 - `Team rows found` and `Priority tier` are formulas so they stay live and organizers can change the rule in the Sheet.
 - Email quota: a consumer Gmail account sends about 100 emails a day, a Workspace account about 1,500. Deploy from a Workspace account if possible.
 
 ## Data handling
 
 Sheets and the Drive folder are shared only with named organizers. EIDs and resumes are deleted 30 days after demo day. The script never returns applicant data to the site.
+
+## Upgrading to the Nov 2026 form (v2 payload)
+
+The questions and Sheet columns changed (see [docs/application-form.md](../docs/application-form.md)). Headers are only written to an empty sheet, so after merging:
+
+1. `clasp push`, then Deploy > Manage deployments > edit > New version (the `/exec` URL stays the same).
+2. Create a Drive folder for resumes, share it with organizers only, and set `RESUME_FOLDER_ID`. Until it is set, any submission that carries a resume fails with a server error (the applicant sees the retry screen), so do this before the form opens.
+3. In both spreadsheets, delete or rename the old `Applications` tab (it has the old columns).
+4. Run `setup` (approve the new Drive permission), then `testSubmit`, and check the TEST sheet.

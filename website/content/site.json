@@ -42,27 +42,28 @@
   },
   "dates": {
     "applicationsOpen": "2026-11-09T09:00:00-06:00",
-    "applicationsClose": "2026-12-04T23:59:00-06:00",
-    "decisionsBy": "2026-12-11",
+    "applicationsClose": "2026-12-15T23:59:00-06:00",
+    "decisionsBy": "2027-01-22",
     "bootCamp": "2027-02-05",
+    "bootCampTime": "9 AM to 3 PM",
     "buildWindow": {
-      "start": "TODO",
-      "end": "TODO",
-      "label": "TODO Build week, dates coming soon"
+      "start": "2027-02-05",
+      "end": "2027-02-19",
+      "label": "Feb 5 to 19, 2027"
     },
     "demoDay": {
-      "date": "TODO",
-      "label": "TODO Demo day, date coming soon"
+      "date": "2027-02-19",
+      "label": "Thu, Feb 19, 2027"
     }
   },
   "contact": {
-    "email": "TODO organizers@utexas.edu",
+    "email": "hb9349@my.utexas.edu",
     "label": "Questions? Email the organizing team"
   },
   "features": {
     "_note": "applicationsLive is the on/off switch for the live application form. Leave it false until launch; flip to true and set dates.applicationsOpen/applicationsClose to open it. Test links (PR previews) and local dev always show the form.",
     "applicationsLive": false,
-    "resumeUpload": false,
+    "resumeUpload": true,
     "banner": false,
     "seatMeter": false
   },
@@ -265,12 +266,12 @@
       },
       {
         "title": "Build",
-        "when": "TODO Build week dates",
+        "when": "Feb 5 to 19, 2027",
         "body": "One week to turn the problem into a working product. Mentors and office hours are available through the week. Teams work on their own schedule."
       },
       {
         "title": "Demo day",
-        "when": "TODO Demo day date",
+        "when": "Feb 19, 2027",
         "body": "Teams present to the partner companies, McCombs leadership and the Austin technology community. Winners are announced."
       }
     ]
@@ -312,13 +313,18 @@
       },
       {
         "q": "Who do I contact?",
-        "a": "Email the organizing team at TODO organizers@utexas.edu."
+        "a": "Email the organizing team at hb9349@my.utexas.edu."
       }
     ]
   },
   "form": {
     "title": "Apply",
-    "intro": "About three minutes, one question at a time. Your answers are saved in this browser so you can return later.",
+    "introBullets": [
+      "Seats are limited, please apply by {closeDate}.",
+      "We will email participants once selections are made.",
+      "Answers are saved if you need to come back later.",
+      "Please reach out to {email} if you have any questions."
+    ],
     "startCta": "Start",
     "nextCta": "Next",
     "backCta": "Back",
@@ -328,70 +334,97 @@
     "optionalTag": "Optional",
     "fields": {
       "name": {
-        "label": "What's your full name?",
-        "help": "As it appears on your UT record.",
-        "placeholder": "Jane Doe"
+        "label": "What's your name?"
+      },
+      "firstName": {
+        "label": "First name",
+        "placeholder": "Jane"
+      },
+      "lastName": {
+        "label": "Last name",
+        "placeholder": "Doe"
+      },
+      "contact": {
+        "label": "Your UT EID and email",
+        "help": "This email will be used for all communications."
       },
       "eid": {
-        "label": "What's your UT EID?",
-        "help": "Letters followed by numbers, like abc123. We use it to make sure each person has one application.",
+        "label": "UT EID",
         "placeholder": "abc123"
       },
       "email": {
-        "label": "What's your UT email?",
-        "help": "Must end in utexas.edu. Decisions go to this address.",
-        "placeholder": "you@utexas.edu"
+        "label": "Email",
+        "placeholder": "you@my.utexas.edu"
       },
       "program": {
-        "label": "Which program are you in?",
-        "help": "Full-time MBA students get priority. Everyone else is eligible."
-      },
-      "feb5": {
-        "label": "Can you attend the full boot camp on Friday, Feb 5, 2027?",
-        "help": "The boot camp runs all day on campus. Full attendance is required.",
-        "noNote": "Full attendance at the boot camp is required for selection. You can still submit, but you won't be selected unless this changes."
-      },
-      "week": {
-        "label": "Are you available for the rest of hackathon week?",
-        "help": "TODO Build week dates coming soon. Teams build on their own schedule; plan on 15 to 25 hours."
+        "label": "Which program are you in?"
       },
       "applyingAs": {
-        "label": "Are you applying with a team or solo?",
-        "help": "Teams are two to four people and are preferred in selection. Individual applicants are placed on a team."
+        "label": "Are you applying with a team or on your own?",
+        "help": "Teams are 2 to 4 people and are preferred in selection."
       },
       "teamName": {
         "label": "What's your team name?",
-        "help": "Every teammate enters this same name on their own application. Capitalization doesn't matter.",
+        "help": "Please have each team member apply and provide the same team name so we can match you.",
         "placeholder": "Invoice Ninjas"
       },
       "teammateEmails": {
-        "label": "What are your teammates' UT emails?",
-        "help": "One to three addresses, not including yours. Each teammate still submits their own application.",
+        "label": "What are your teammates' emails?",
+        "help": "1 to 3 addresses, not including yours (teams are 2 to 4 people).",
         "placeholder": "teammate@utexas.edu",
         "addLabel": "Add another teammate",
         "removeLabel": "Remove"
       },
+      "captain": {
+        "label": "Will you be your team's captain?",
+        "help": [
+          "As captain, you'll be the main point of contact and help guide your team.",
+          "We want every team to bring a mix of skills. Ideally the captain is comfortable using AI tools like Claude Code or Codex.",
+          "A technical background isn't required. Knowing each team's skill level helps us support every team in the best way."
+        ]
+      },
+      "captainCommit": {
+        "label": "Thanks for stepping up as captain",
+        "text": "Captains are our main point of contact, help the team show up for the boot camp and final presentation, and keep things moving during the build.",
+        "checkboxLabel": "I'm in as my team's captain"
+      },
+      "bootCamp": {
+        "label": "The boot camp runs {bootCamp}, {bootCampTime} on campus. Will you be available to attend the full session?",
+        "help": "Full attendance is required. Every participant gets their tools and their use case here."
+      },
+      "buildWindow": {
+        "label": "The hackathon build runs {buildStart} to {buildEnd}. Will you have time to work on your use case during this period?",
+        "help": "Teams build on their own schedule, with mentors available along the way."
+      },
+      "finalPresentation": {
+        "label": "The final presentation is {finalPresentation}. Will you be available to attend?",
+        "help": "Finalist teams present to a panel of alumni judges. Hold the date in case your team is selected."
+      },
+      "useCases": {
+        "label": "Which business areas interest you most?",
+        "help": "Pick at least 3, in order of interest: tap your first choice first. Use cases aren't confirmed yet. We'll do our best to match your preferences, but we can't guarantee them."
+      },
       "aiSubscription": {
-        "label": "What AI tools do you use today?",
-        "help": "Choose the closest match. This helps us balance teams and plan support."
+        "label": "Do you pay for any AI tools today?",
+        "help": "Choose the closest match. This helps us plan tool access and support."
       },
       "buildExperience": {
-        "label": "Have you built anything with AI or no-code tools before?",
-        "help": "This helps us place individual applicants on balanced teams."
+        "label": "How much have you built with AI tools?",
+        "help": "There's no wrong answer. This helps us balance teams."
       },
-      "why": {
-        "label": "Why do you want to do this?",
-        "help": "Up to 300 characters. A couple of sentences is plenty.",
-        "placeholder": "I want to…"
+      "aiComfort": {
+        "label": "How comfortable are you using AI tools today?",
+        "help": "We'll ask again after the hackathon to see how it changed."
       },
       "resume": {
         "label": "Upload your resume",
-        "help": "PDF, up to 5 MB. Optional."
-      },
-      "consent": {
-        "label": "One last thing",
-        "text": "I understand my application data is used only for hackathon selection and team placement, is shared only with the organizing team, and is deleted 30 days after demo day.",
-        "checkboxLabel": "I agree"
+        "help": "Optional. PDF, up to 5 MB. It helps us understand the skills on each team.",
+        "chooseLabel": "Choose a PDF",
+        "replaceLabel": "Choose a different file",
+        "removeLabel": "Remove",
+        "shareLabel": "OK to share my resume with program partners",
+        "shareHelp": "Partner companies may be interested in participants. We only share your resume if you check this box.",
+        "note": "Your file isn't saved in this browser. If you leave and come back, attach it again."
       }
     },
     "options": {
@@ -416,7 +449,7 @@
         },
         {
           "value": "maybe",
-          "label": "Maybe"
+          "label": "Not sure yet"
         },
         {
           "value": "no",
@@ -427,12 +460,12 @@
         {
           "value": "team",
           "label": "With a team",
-          "description": "Two to four people. Each member applies."
+          "description": "A team of 2 to 4. Every member submits their own application with the same team name."
         },
         {
           "value": "solo",
-          "label": "Individually",
-          "description": "We place you on a team."
+          "label": "On my own",
+          "description": "We'll do our best to place you on a team of 2 to 4, but placement isn't guaranteed."
         }
       ],
       "aiSubscription": [
@@ -454,44 +487,115 @@
         {
           "value": "paid",
           "label": "Paid individual plan",
-          "description": "Pro, Plus or similar"
+          "description": "Claude Pro, ChatGPT Plus, Cursor or similar"
         },
         {
           "value": "power",
           "label": "Power-user plan",
-          "description": "Max or similar"
+          "description": "Claude Max, ChatGPT Pro or similar"
         }
       ],
       "buildExperience": [
         {
           "value": "none",
-          "label": "None",
-          "description": "This would be my first"
+          "label": "Never used an AI coding tool",
+          "description": "This would be my first time"
         },
         {
-          "value": "some",
-          "label": "Some",
-          "description": "No-code tools, tutorials or small experiments"
+          "value": "tried",
+          "label": "Tried one by following along",
+          "description": "A tutorial, class exercise or quick experiment"
+        },
+        {
+          "value": "prototype",
+          "label": "Built a working prototype on my own",
+          "description": "With tools like Claude Code, Codex, Cursor or Lovable"
         },
         {
           "value": "shipped",
-          "label": "I've shipped something",
-          "description": "People other than me have used it"
+          "label": "Built and run apps",
+          "description": "Something live that I maintain"
+        }
+      ],
+      "captain": [
+        {
+          "value": "yes",
+          "label": "Yes, I'll be captain"
+        },
+        {
+          "value": "no",
+          "label": "No, a teammate is captain"
+        }
+      ],
+      "businessAreas": [
+        {
+          "value": "finance",
+          "label": "Finance",
+          "description": "Forecasting, reporting, investment analysis"
+        },
+        {
+          "value": "marketing",
+          "label": "Marketing",
+          "description": "Campaigns, content, customer insight"
+        },
+        {
+          "value": "operations",
+          "label": "Operations & supply chain",
+          "description": "Logistics, procurement, process automation"
+        },
+        {
+          "value": "hr",
+          "label": "HR & people",
+          "description": "Recruiting, onboarding, employee experience"
+        },
+        {
+          "value": "sales",
+          "label": "Sales",
+          "description": "Prospecting, CRM, pricing"
+        },
+        {
+          "value": "strategy",
+          "label": "Strategy",
+          "description": "Market research, competitive analysis, planning"
+        }
+      ],
+      "aiComfort": [
+        {
+          "value": "1",
+          "label": "1 · Not at all comfortable"
+        },
+        {
+          "value": "2",
+          "label": "2 · Slightly comfortable"
+        },
+        {
+          "value": "3",
+          "label": "3 · Somewhat comfortable"
+        },
+        {
+          "value": "4",
+          "label": "4 · Very comfortable"
+        },
+        {
+          "value": "5",
+          "label": "5 · Extremely comfortable"
         }
       ]
     },
     "errors": {
       "required": "This one's required.",
-      "nameLength": "Please enter your full name (2 to 80 characters).",
+      "nameLength": "Please enter a name between 1 and 40 characters.",
       "eidFormat": "An EID is letters followed by numbers, like abc123.",
-      "emailDomain": "Please use an email that ends in utexas.edu.",
       "emailFormat": "That doesn't look like a valid email.",
       "teamNameLength": "Team names are 2 to 40 characters.",
       "teammateCount": "Add between 1 and 3 teammate emails.",
       "teammateSelf": "That's your own email. Add your teammates' emails instead.",
       "teammateDuplicate": "You've listed the same email twice.",
-      "whyLength": "Keep it to 300 characters.",
-      "consent": "We need your consent to process the application."
+      "useCases": "Pick at least 3 business areas.",
+      "resumeType": "Please upload a PDF.",
+      "resumeSize": "That file is over 5 MB. Please upload a smaller PDF.",
+      "resumeRead": "We couldn't read that file. Please choose it again.",
+      "captainCommit": "Check the box to confirm, or go back and choose No."
     },
     "review": {
       "heading": "Check your answers",
@@ -505,15 +609,15 @@
       },
       "afterClose": {
         "heading": "Applications are closed",
-        "body": "Decisions go out by email by Dec 11, 2026. For questions, contact the organizing team."
+        "body": "Decisions go out by email by Jan 22, 2027. For questions, contact the organizing team."
       }
     },
     "confirmation": {
       "heading": "Application received.",
-      "body": "A confirmation email is on its way to {email}. Decisions go out by {decisionsBy}.",
+      "body": "A confirmation email is on its way to {email}. We'll email you by {decisionsBy} to let you know if you've been selected.",
       "resubmittedBody": "Your earlier application has been updated. The newest answers are the ones we will use.",
       "idLabel": "Reference",
-      "teamNote": "Each member of \"{teamName}\" needs to submit their own application with the same team name.",
+      "teamNote": "Remind each member of \"{teamName}\" to submit their own application with the same team name.",
       "homeCta": "Back to the site"
     },
     "failure": {
@@ -525,7 +629,7 @@
     "previewNote": "Test mode: this form is open for review only. Submissions go to the test sheet, not real applications."
   },
   "footer": {
-    "line": "Run by the McCombs Tech Club with support from partners TODO.",
+    "line": "Run by the McCombs Tech Club.",
     "disclaimer": "Not an official University of Texas or McCombs School of Business website.",
     "links": [
       {
@@ -538,14 +642,14 @@
       },
       {
         "label": "Contact",
-        "href": "mailto:TODO organizers@utexas.edu"
+        "href": "mailto:hb9349@my.utexas.edu"
       }
     ]
   },
   "applyCta": {
     "heading": "Applications open soon",
-    "body": "About 100 seats. Teams preferred. Full attendance at the Feb 5 boot camp required. Decisions by email by Dec 11, 2026.",
-    "closeNote": "Applications close Friday, Dec 4, 2026 at 11:59 PM CT.",
+    "body": "About 100 seats. Teams preferred. Full attendance at the Feb 5 boot camp required. Decisions by email by Jan 22, 2027.",
+    "closeNote": "Applications close Tuesday, Dec 15, 2026 at 11:59 PM CT.",
     "cta": "Apply now"
   }
 }

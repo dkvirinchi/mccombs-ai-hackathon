@@ -10,7 +10,7 @@ import { REVIEW_MODE } from "./window";
  */
 
 export type SubmitPayload = Application & {
-  v: 1;
+  v: 2;
   env: "prod" | "preview";
   resume: null | { name: string; mime: string; base64: string };
   hp: string;
@@ -27,16 +27,35 @@ export const SCRIPT_URL = process.env.NEXT_PUBLIC_APPS_SCRIPT_URL ?? "";
 export const SUBMIT_ENV: "prod" | "preview" =
   !REVIEW_MODE && process.env.NEXT_PUBLIC_ENV === "prod" ? "prod" : "preview";
 
-export function buildPayload(app: Application, honeypot: string): SubmitPayload {
+/** Clear answers that no longer apply (team fields for solo applicants, captain commitment for non-captains). */
+export function buildPayload(
+  app: Application,
+  honeypot: string,
+  resume: { name: string; mime: string; base64: string } | null,
+): SubmitPayload {
+  const team = app.applyingAs === "team";
+  const captain = team ? app.captain : "";
   return {
     ...app,
-    teammateEmails: app.applyingAs === "team" ? app.teammateEmails.filter(Boolean) : [],
-    teamName: app.applyingAs === "team" ? app.teamName : "",
-    v: 1,
+    teammateEmails: team ? app.teammateEmails.filter(Boolean) : [],
+    teamName: team ? app.teamName : "",
+    captain,
+    captainCommit: captain === "yes" && app.captainCommit,
+    resumeShare: resume ? app.resumeShare : false,
+    v: 2,
     env: SUBMIT_ENV,
-    resume: null,
+    resume: resume ? { name: resume.name, mime: resume.mime, base64: resume.base64 } : null,
     hp: honeypot,
   };
+}
+
+/**
+ * How long to wait for the Apps Script. A plain application is a few hundred bytes and answers
+ * in a few seconds. With a resume the body can be several MB of base64, and the script also
+ * writes the file to Drive, so allow a minute on top for slow phone connections.
+ */
+export function submitTimeoutMs(payload: SubmitPayload): number {
+  return payload.resume ? 90_000 : 20_000;
 }
 
 export async function submitApplication(payload: SubmitPayload): Promise<SubmitResponse> {
@@ -47,12 +66,13 @@ export async function submitApplication(payload: SubmitPayload): Promise<SubmitR
     return { ok: false, error: "config", message: "NEXT_PUBLIC_APPS_SCRIPT_URL is not set." };
   }
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 20_000);
+  const body = JSON.stringify(payload);
+  const timer = setTimeout(() => controller.abort(), submitTimeoutMs(payload));
   try {
     const res = await fetch(SCRIPT_URL, {
       method: "POST",
       headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify(payload),
+      body,
       redirect: "follow",
       signal: controller.signal,
     });
