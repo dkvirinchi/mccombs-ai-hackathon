@@ -390,18 +390,15 @@
       },
       "bootCamp": {
         "label": "The boot camp runs {bootCamp}, {bootCampTime} on campus. Will you be available to attend the full session?",
-        "help": "Full attendance is required. Every participant gets their tools and their use case here.",
-        "noNote": "Full attendance at the boot camp is required for selection. You can still apply, but you won't be selected unless this changes."
+        "help": "Full attendance is required. Every participant gets their tools and their use case here."
       },
       "buildWindow": {
         "label": "The hackathon build runs {buildStart} to {buildEnd}. Will you have time to work on your use case during this period?",
-        "help": "Teams build on their own schedule, with mentors available along the way.",
-        "noNote": "Teams count on every member during the build. You can still apply, but confirmed availability is prioritized."
+        "help": "Teams build on their own schedule, with mentors available along the way."
       },
       "finalPresentation": {
         "label": "The final presentation is {finalPresentation}. Will you be available to attend?",
-        "help": "Finalist teams present to a panel of alumni judges. Hold the date in case your team is selected.",
-        "noNote": "Finalist teams present in person. You can still apply, but confirmed availability is prioritized."
+        "help": "Finalist teams present to a panel of alumni judges. Hold the date in case your team is selected."
       },
       "useCases": {
         "label": "Which business areas interest you most?",
